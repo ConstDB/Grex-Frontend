@@ -1,5 +1,5 @@
 import logo from "@/assets/Vector.svg";
-import { FEATURES } from "../constants";
+import { SIGNUP_TEXTS } from "../constants";
 
 export default function SignupHeroPanel() {
   return (
@@ -18,12 +18,12 @@ export default function SignupHeroPanel() {
         </span>
       </div>
 
-      {FEATURES.map((f) => (
+      {SIGNUP_TEXTS.map((f) => (
         <div className="my-13">
           <f.icon className="text-brand-primary size-14" />
           <div className="mt-4">
-            <h3 className="text-dark-text text-lg">{f.main}</h3>
-            <p className="text-dark-subtle text-lg">{f.sub}</p>
+            <h3 className="text-dark-text text-lg">{f.title}</h3>
+            <p className="text-dark-subtle text-lg">{f.description}</p>
           </div>
         </div>
       ))}
