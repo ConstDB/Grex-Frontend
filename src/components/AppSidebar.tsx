@@ -12,103 +12,137 @@ import {
   SidebarMenuSub,
   SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
-import { SIDEBAR_ITEMS } from "@/constants";
 import {
   Collapsible,
   CollapsibleContent,
   CollapsibleTrigger,
 } from "./ui/collapsible";
+import { SIDEBAR_ITEMS } from "@/constants";
 import {
   IoIosHelpCircleOutline,
   IoIosInformationCircleOutline,
 } from "react-icons/io";
 import profile from "@/assets/sample_profile.svg";
+import { PROJECTS } from "@/constants/index";
+import { useAuth } from "@/context/auth-context";
+import { useLocation, useNavigate } from "react-router";
+import slugify from "slugify";
 
 export function AppSidebar() {
+  const location = useLocation();
+  const navigate = useNavigate();
+  const activeTab = location.pathname.split("/")[1];
+  const activeProject = location.pathname.split("/")[2];
+  const { user } = useAuth();
+
+  const handleSelectTab = (item: string) => {
+    navigate(`/${slugify(item, { lower: true })}`);
+  };
+
+  const handleSelectActiveProject = (projectName: string) => {
+    navigate(`/my-projects/${slugify(projectName, { lower: true })}`);
+  };
+
+  const getActiveClass = (tab: string) => {
+    return activeTab === slugify(tab, { lower: true })
+      ? "text-brand-primary"
+      : "text-white";
+  };
+
+  const getActiveProjectClass = (projectName: string) => {
+    return activeProject === slugify(projectName, { lower: true })
+      ? "text-brand-primary"
+      : "text-white";
+  };
+
   return (
-    <Sidebar variant="sidebar" className="border-r border-r-dark-muted">
-      <SidebarHeader>
+    <Sidebar variant="sidebar" className="border-r border-r-dark-muted font-inter">
+      <SidebarHeader className="border-b border-b-dark-muted">
         <div className="w-full flex space-x-3 rounded">
-          <img src={profile} alt="profile picture" />
+          <img
+            src={profile}
+            className="size-13 rounded"
+            alt="profile picture"
+          />
           <div>
-            <h3 className="font-medium text-dark-text">Nelman V. Ninjaboy</h3>
+            <h3 className="font-medium text-dark-text">
+              {user?.first_name ?? "Jonel"} {user?.last_name ?? "Villaver"}
+            </h3>
             <h4 className="text-sm text-dark-subtle">
-              nelmanninjaboy@gmail.com
+              {user?.email ?? "jonelvillaver@gmail.com"}
             </h4>
           </div>
         </div>
       </SidebarHeader>
+
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel>Main Menu</SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
-              {SIDEBAR_ITEMS.map((item) => (
-                <>
-                  {item.collapsible ? (
-                    <Collapsible defaultOpen className="group/collapsible">
-                      <SidebarMenuItem key={item.title}>
-                        <CollapsibleTrigger>
-                          <SidebarMenuButton>
-                            <div className="flex items-center space-x-2">
-                              <item.icon />
-                              <span>{item.title}</span>
-                            </div>
-                          </SidebarMenuButton>
-                        </CollapsibleTrigger>
+              {SIDEBAR_ITEMS.map((item) =>
+                item.collapsible ? (
+                  <Collapsible
+                    key={item.title}
+                    defaultOpen
+                    className="group/collapsible"
+                  >
+                    <CollapsibleTrigger
+                      onClick={() => handleSelectTab(item.title)}
+                      className="flex items-center space-x-3 px-2"
+                    >
+                      <item.icon className={getActiveClass(item.title)} />
+                      <span className={getActiveClass(item.title)}>
+                        {item.title}
+                      </span>
+                    </CollapsibleTrigger>
 
-                        <CollapsibleContent>
-                          <SidebarMenuSub>
-                            <SidebarMenuButton>
-                              <SidebarMenuSubItem className="">
-                                Grex - Collaboration Platform
-                              </SidebarMenuSubItem>
-                            </SidebarMenuButton>
-                            <SidebarMenuButton>
-                              <SidebarMenuSubItem>
-                                Operating System Final Project
-                              </SidebarMenuSubItem>
-                            </SidebarMenuButton>
-                            <SidebarMenuButton>
-                              <SidebarMenuSubItem>
-                                Machine Learning Final Paper
-                              </SidebarMenuSubItem>
-                            </SidebarMenuButton>
-                            <SidebarMenuButton>
-                              <SidebarMenuSubItem>
-                                Automata Theory Final Paper
-                              </SidebarMenuSubItem>
-                            </SidebarMenuButton>
-                          </SidebarMenuSub>
-                        </CollapsibleContent>
-                      </SidebarMenuItem>
-                    </Collapsible>
-                  ) : (
-                    <SidebarMenuItem key={item.title}>
-                      <SidebarMenuButton asChild>
-                        <button>
-                          <item.icon />
-                          <span>{item.title}</span>
-                        </button>
-                      </SidebarMenuButton>
-                    </SidebarMenuItem>
-                  )}
-                </>
-              ))}
+                    <CollapsibleContent>
+                      <SidebarMenuSub>
+                        {PROJECTS.map((project) => (
+                          <SidebarMenuButton key={project.title}>
+                            <SidebarMenuSubItem
+                              onClick={() =>
+                                handleSelectActiveProject(project.title)
+                              }
+                              className={`truncate text-white ${getActiveProjectClass(
+                                project.title
+                              )}`}
+                            >
+                              {project.title}
+                            </SidebarMenuSubItem>
+                          </SidebarMenuButton>
+                        ))}
+                      </SidebarMenuSub>
+                    </CollapsibleContent>
+                  </Collapsible>
+                ) : (
+                  <SidebarMenuItem key={item.title}>
+                    <SidebarMenuButton
+                      onClick={() => handleSelectTab(item.title)}
+                    >
+                      <item.icon className={getActiveClass(item.title)} />
+                      <span className={getActiveClass(item.title)}>
+                        {item.title}
+                      </span>
+                    </SidebarMenuButton>
+                  </SidebarMenuItem>
+                )
+              )}
             </SidebarMenu>
           </SidebarGroupContent>
         </SidebarGroup>
       </SidebarContent>
       <SidebarFooter>
         <div className="flex flex-col space-y-4">
-          <button className="flex space-x-3">
+          <div className="flex space-x-3">
             <IoIosInformationCircleOutline className="size-6" />
             <span>About</span>
-          </button>
-          <button className="flex items-center space-x-3">
+          </div>
+          <div className="flex items-center space-x-3">
             <IoIosHelpCircleOutline className="size-6" />
             <span>Help & Support</span>
-          </button>
+          </div>
         </div>
       </SidebarFooter>
     </Sidebar>
