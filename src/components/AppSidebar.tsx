@@ -23,10 +23,10 @@ import {
   IoIosInformationCircleOutline,
 } from "react-icons/io";
 import profile from "@/assets/sample_profile.svg";
-import { PROJECTS } from "@/constants/index";
 import { useAuth } from "@/context/auth-context";
 import { useLocation, useNavigate } from "react-router";
 import slugify from "slugify";
+import { useProjectStore } from "@/stores/useProjectStore";
 
 export function AppSidebar() {
   const location = useLocation();
@@ -34,6 +34,7 @@ export function AppSidebar() {
   const activeTab = location.pathname.split("/")[1];
   const activeProject = location.pathname.split("/")[2];
   const { user } = useAuth();
+  const { projects } = useProjectStore();
 
   const handleSelectTab = (item: string) => {
     navigate(`/${slugify(item, { lower: true })}`);
@@ -56,7 +57,10 @@ export function AppSidebar() {
   };
 
   return (
-    <Sidebar variant="sidebar" className="border-r border-r-dark-muted font-inter">
+    <Sidebar
+      variant="sidebar"
+      className="border-r border-r-dark-muted font-inter"
+    >
       <SidebarHeader className="border-b border-b-dark-muted">
         <div className="w-full flex space-x-3 rounded">
           <img
@@ -99,17 +103,17 @@ export function AppSidebar() {
 
                     <CollapsibleContent>
                       <SidebarMenuSub>
-                        {PROJECTS.map((project) => (
-                          <SidebarMenuButton key={project.title}>
+                        {projects.map((project) => (
+                          <SidebarMenuButton key={project.name}>
                             <SidebarMenuSubItem
                               onClick={() =>
-                                handleSelectActiveProject(project.title)
+                                handleSelectActiveProject(project.name)
                               }
                               className={`truncate text-white ${getActiveProjectClass(
-                                project.title
+                                project.name
                               )}`}
                             >
-                              {project.title}
+                              {project.name}
                             </SidebarMenuSubItem>
                           </SidebarMenuButton>
                         ))}

@@ -8,7 +8,7 @@ import PageLoader from "@/components/PageLoader";
 const Landing = lazy(() => import("./pages/Landing"));
 const Signup = lazy(() => import("@/features/auth/pages/Signup"));
 const Signin = lazy(() => import("@/features/auth/pages/Signin"));
-const Dashboard = lazy(() => import("./pages/Dashboard"));
+// const Dashboard = lazy(() => import("./pages/Dashboard"));
 const AppLayout = lazy(() => import("../components/AppLayout"));
 const MyTasks = lazy(() => import("./pages/MyTasks"));
 const MyProjects = lazy(() => import("./pages/MyProjects"));
@@ -33,7 +33,7 @@ export default function App() {
       path: "/",
       element: withSuspense(<AppLayout />),
       children: [
-        { path: "dashboard", element: withSuspense(<Dashboard />) },
+        // { path: "dashboard", element: withSuspense(<Dashboard />) },
         { path: "my-tasks", element: withSuspense(<MyTasks />) },
         { path: "my-calendar", element: withSuspense(<MyCalendar />) },
         { path: "my-inbox", element: withSuspense(<MyInbox />) },
