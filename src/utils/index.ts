@@ -1,10 +1,4 @@
-import type { Task, TaskPriority } from "@/types/task";
-
-type TaskGroups = {
-  pending: Task[];
-  done: Task[];
-  overdue: Task[];
-};
+import type { Task, TaskPriority, TaskGroups } from "@/types/task";
 
 export const unslugify = (string: string) => {
   return string.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
@@ -29,11 +23,11 @@ export const formatDate = (date: Date): string => {
 
 export const getTypeColor = (type: string): string => {
   switch (type) {
-    case "Pending":
+    case "pending":
       return "bg-info";
-    case "Done":
+    case "done":
       return "bg-success";
-    case "Overdue":
+    case "overdue":
       return "bg-error";
     default:
       return "";

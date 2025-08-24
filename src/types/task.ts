@@ -15,3 +15,9 @@ export interface Task extends NewTask {
   created_at: Date;
   marked_done_at: Date | null;
 }
+
+export type TaskGroups = {
+  pending: Task[];
+  done: Task[];
+  overdue: Task[];
+};
