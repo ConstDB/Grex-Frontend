@@ -6,14 +6,25 @@ import { IoDocumentAttachOutline } from "react-icons/io5";
 import { BiCommentDetail } from "react-icons/bi";
 import WorkspaceMembers from "@/features/workspace/components/WorkspaceMembers";
 import { Progress } from "@/components/ui/progress";
+import type { DraggableProvidedDragHandleProps } from "@hello-pangea/dnd";
 
 type Props = {
   task: Task;
+  isDragging: boolean;
+  dragHandleProps: DraggableProvidedDragHandleProps | null;
 };
 
-export default function KanbanTask({ task }: Props) {
+export default function KanbanTask({
+  task,
+  isDragging,
+  dragHandleProps,
+}: Props) {
   return (
-    <div className="w-full p-4 bg-[#262626] my-2 rounded border border-dark-muted">
+    <div
+      className={`w-full p-4 bg-[#262626] my-2 rounded border border-dark-muted ${
+        isDragging ? "shadow-lg scale-105 bg-[#3a3a3a]" : ""
+      } transition-all duration-200`}
+    >
       <div className="flex justify-between">
         <div
           className={`px-4 py-1 rounded-sm text-sm  ${getPrioLevelStyle(
@@ -22,7 +33,9 @@ export default function KanbanTask({ task }: Props) {
         >
           {capitalizeWord(task.priority_level)}
         </div>
-        <RiDraggable className="size-6 text-dark-text" />
+        <div {...(dragHandleProps || {})}>
+          <RiDraggable className="size-6 text-dark-text" />
+        </div>
       </div>
 
       <div>
@@ -45,6 +58,7 @@ export default function KanbanTask({ task }: Props) {
             <IoDocumentAttachOutline className="size-4" />
             <span className="text-sm">3</span>
           </div>
+
           <div className="bg-dark-muted text-dark-text p-2 rounded flex items-center space-x-1">
             <BiCommentDetail className="size-4" />
             <span className="text-sm">3</span>
