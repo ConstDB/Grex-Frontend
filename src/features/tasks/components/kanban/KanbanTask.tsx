@@ -33,7 +33,7 @@ export default function KanbanTask({
   return (
     <div
       className={`w-full p-2 bg-[#262626] my-2 rounded border border-dark-muted ${
-        isDragging ? "shadow-lg scale-105 bg-[#3a3a3a]" : ""
+        isDragging ? "shadow-lg scale-105 transform rotate-2 bg-[#3a3a3a]" : ""
       } transition-all duration-200`}
     >
       <div className="flex justify-between">
@@ -52,8 +52,8 @@ export default function KanbanTask({
       <div>
         <h3 className="text-dark-text text-sm font-semibold">{task.title}</h3>
         <p className="text-dark-subtle text-xs">{task.subject}</p>
-        <div className="text-dark-subtle flex space-x-2 items-center text-xs my-2">
-          <CiCalendar />
+        <div className="text-dark-subtle flex space-x-1 items-center text-xs my-2">
+          <CiCalendar className="size-4" />
           <p>{formatDate(task.deadline)}</p>
         </div>
         <div className="p-2">
