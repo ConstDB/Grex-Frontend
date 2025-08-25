@@ -15,9 +15,10 @@ import { useState, type PropsWithChildren } from "react";
 import newProjectHero from "@/assets/NewProjectHero.svg";
 import { Textarea } from "@/components/ui/textarea";
 import { DatePicker } from "@/components/DatePicker";
-import type { NewProject } from "@/types/project";
+import type { NewProject, Project } from "@/types/project";
 import { useProjectStore } from "@/stores/useProjectStore";
 import RHFFormField from "@/components/RHFFormField";
+import { useAuth } from "@/context/auth-context";
 
 const defaultValues = {
   name: "",
@@ -29,6 +30,8 @@ const defaultValues = {
 
 export function NewProjectModal({ children }: PropsWithChildren) {
   const [open, setOpen] = useState(false);
+  const addProject = useProjectStore((state) => state.addProject);
+  const { user } = useAuth();
   const {
     register,
     handleSubmit,
@@ -37,13 +40,17 @@ export function NewProjectModal({ children }: PropsWithChildren) {
     formState: { errors },
   } = useForm<NewProject>({ defaultValues });
 
-  const { addProject } = useProjectStore();
-
   const onSubmit: SubmitHandler<NewProject> = (project) => {
-    // TODO: add leader_id and send the data to the backend api
-
     // Add project to the project store to simulate sneding request to backend api
-    addProject(project);
+    // change the type to NewProject when the api endpoint is ready
+    const newProject: Project = {
+      ...project,
+      created_by: user?.user_id ?? 1,
+      created_at: new Date(), // temporary
+      workspace_id: Math.random(), // temporary
+    };
+
+    addProject(newProject);
 
     setOpen(false);
     reset();
@@ -54,9 +61,9 @@ export function NewProjectModal({ children }: PropsWithChildren) {
       <DialogTrigger asChild>{children}</DialogTrigger>
       <DialogContent className="sm:max-w-[850px]">
         <form onSubmit={handleSubmit(onSubmit)}>
-          <DialogHeader className="">
-            <DialogTitle className="">Create New Project</DialogTitle>
-            <DialogDescription className="">
+          <DialogHeader>
+            <DialogTitle>Create New Project</DialogTitle>
+            <DialogDescription>
               Set up your project details below. You can update these anytime
             </DialogDescription>
           </DialogHeader>
@@ -68,7 +75,7 @@ export function NewProjectModal({ children }: PropsWithChildren) {
               className="size-[400px]"
             />
             <div className="flex flex-col space-y-6">
-              <RHFFormField id="name" label="name" error={errors.name?.message}>
+              <RHFFormField id="name" label="Name" error={errors.name?.message}>
                 <Input
                   id="name"
                   placeholder="Grex - A Collaboration Platform/Project Management Tool"
