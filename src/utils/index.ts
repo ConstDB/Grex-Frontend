@@ -68,6 +68,8 @@ export const capitalizeWord = (word: string) => {
 };
 
 export const getProgressPercentage = (subtasks: Subtask[]): number => {
+  if (subtasks.length === 0) return 0;
+
   const length = subtasks.length;
   const noOfDone = subtasks.filter((s) => s.is_done).length;
 

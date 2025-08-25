@@ -6,6 +6,9 @@ import { useMemo } from "react";
 import type { DropResult } from "@hello-pangea/dnd";
 import type { TaskGroups } from "@/types/task";
 import { useParams } from "react-router";
+import { Button } from "@/components/ui/button";
+import { GoPlus } from "react-icons/go";
+import NewTaskModal from "../NewTaskModal";
 
 export default function KanbanContainer() {
   // TODO: Actual data fetching for tasks of the selected project
@@ -49,6 +52,14 @@ export default function KanbanContainer() {
 
   return (
     <DragDropContext onDragEnd={handleDragEnd}>
+      <div className="my-2">
+        <NewTaskModal>
+          <Button className="text-sm bg-brand-primary hover:bg-brand-dark">
+            <GoPlus />
+            <span>Add New Task</span>
+          </Button>
+        </NewTaskModal>
+      </div>
       <div className="w-full flex space-x-4">
         {Object.entries(positions).map(([type, task]) => (
           <KanbanColumn key={type} type={type} tasks={task} />
