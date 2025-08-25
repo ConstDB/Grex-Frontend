@@ -1,5 +1,10 @@
 import type { Task } from "@/types/task";
-import { capitalizeWord, formatDate, getPrioLevelStyle } from "@/utils";
+import {
+  capitalizeWord,
+  formatDate,
+  getPrioLevelStyle,
+  getProgressPercentage,
+} from "@/utils";
 import { CiCalendar } from "react-icons/ci";
 import { RiDraggable } from "react-icons/ri";
 import { IoDocumentAttachOutline } from "react-icons/io5";
@@ -7,6 +12,8 @@ import { BiCommentDetail } from "react-icons/bi";
 import WorkspaceMembers from "@/features/workspace/components/WorkspaceMembers";
 import { Progress } from "@/components/ui/progress";
 import type { DraggableProvidedDragHandleProps } from "@hello-pangea/dnd";
+import KanbanSubtasksList from "./KanbanSubtasksList";
+import { useSubtaskStore } from "@/stores/useSubtasksStore";
 
 type Props = {
   task: Task;
@@ -19,6 +26,10 @@ export default function KanbanTask({
   isDragging,
   dragHandleProps,
 }: Props) {
+  const subtasks = useSubtaskStore((state) => state.subtasks).filter(
+    (subtask) => subtask.task_id === task.task_id
+  );
+
   return (
     <div
       className={`w-full p-2 bg-[#262626] my-2 rounded border border-dark-muted ${
@@ -50,6 +61,10 @@ export default function KanbanTask({
         </div>
       </div>
 
+      <div className="my-2">
+        <KanbanSubtasksList task_id={task.task_id} />
+      </div>
+
       <div className="flex justify-between pt-2">
         {/* This is temporary */}
         <WorkspaceMembers />
@@ -69,9 +84,11 @@ export default function KanbanTask({
       <div className="mt-2">
         <div className="flex justify-between my-1">
           <span className="text-dark-text text-sm">Progress</span>
-          <span className="text-dark-subtle text-sm">83%</span>
+          <span className="text-dark-subtle text-sm">
+            {getProgressPercentage(subtasks)}%
+          </span>
         </div>
-        <Progress value={83} />
+        <Progress value={getProgressPercentage(subtasks)} />
       </div>
     </div>
   );
