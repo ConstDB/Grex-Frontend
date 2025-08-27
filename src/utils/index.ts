@@ -1,5 +1,19 @@
 import type { Task, TaskPriority, TaskGroups, Subtask } from "@/types/task";
 
+// MOCK USER IMAGES FOR TESTING
+const USER_IMAGES = [
+  "https://randomuser.me/api/portraits/men/32.jpg",
+  "https://randomuser.me/api/portraits/women/45.jpg",
+  "https://randomuser.me/api/portraits/men/67.jpg",
+  "https://randomuser.me/api/portraits/women/12.jpg",
+  "https://randomuser.me/api/portraits/men/5.jpg",
+  "https://randomuser.me/api/portraits/women/88.jpg",
+  "https://randomuser.me/api/portraits/men/23.jpg",
+  "https://randomuser.me/api/portraits/women/61.jpg",
+  "https://randomuser.me/api/portraits/men/90.jpg",
+  "https://randomuser.me/api/portraits/women/7.jpg",
+];
+
 export const unslugify = (string: string) => {
   return string.replace(/-/g, " ").replace(/\b\w/g, (c) => c.toUpperCase());
 };
@@ -102,4 +116,9 @@ export const getPriorityBadge = (
     default:
       return "outline";
   }
+};
+
+export const getRandomUserImage = (): string => {
+  const randomIndex = Math.floor(Math.random() * USER_IMAGES.length);
+  return USER_IMAGES[randomIndex];
 };
