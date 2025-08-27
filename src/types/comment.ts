@@ -8,5 +8,5 @@ export interface Comment extends NewComment {
   task_id: number;
   created_at: Date;
   profile_picture: string;
-  sender_name: string;
+  sender_name: string; 
 }
