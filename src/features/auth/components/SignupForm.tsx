@@ -6,7 +6,7 @@ import { BsPersonCircle } from "react-icons/bs";
 import { CiMail, CiLock } from "react-icons/ci";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { Loader2 } from "lucide-react";
 import api from "@/lib/axios";
 import axios from "axios";
@@ -30,6 +30,8 @@ export default function SignupForm() {
   const [isLoading, setIsLoading] = useState(false);
   const { setToken, setUser } = useAuth();
 
+  const navigate = useNavigate();
+
   const handleAccountCreation = async ({
     values,
     setErrors,
@@ -47,6 +49,7 @@ export default function SignupForm() {
       const response = await api.post("/auth/sign-up", userCredentials);
       setToken(response.data.access_token);
       setUser(response.data.user);
+      navigate("/my-projects"); // TODO: Implement protected routes
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const serverMessage =
