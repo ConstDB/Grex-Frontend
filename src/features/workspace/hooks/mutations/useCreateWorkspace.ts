@@ -1,6 +1,6 @@
 import type { NewProject, Project } from "@/types/project";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { createWorkspace } from "../api/workspaceApi";
+import { createWorkspace } from "../../api/workspaceApi";
 
 export const useCreateWorkspace = () => {
   const queryClient = useQueryClient();

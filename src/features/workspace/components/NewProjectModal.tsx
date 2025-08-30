@@ -19,7 +19,7 @@ import type { NewProject } from "@/types/project";
 import RHFFormField from "@/components/RHFFormField";
 import { useAuth } from "@/context/auth-context";
 import { Navigate } from "react-router";
-import { useCreateWorkspace } from "../hooks/useCreateWorkspace";
+import { useCreateWorkspace } from "../hooks/mutations/useCreateWorkspace";
 
 const defaultValues = {
   name: "",
