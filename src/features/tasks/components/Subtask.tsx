@@ -1,10 +1,10 @@
+import { usePatchSubtaskMutation } from "../hooks/mutations/usePatchSubtaskMutation";
+import { useDeleteSubtaskMutation } from "../hooks/mutations/useDeleteSubtaskMutation";
 import { Checkbox } from "@/components/ui/checkbox";
 import { cn } from "@/lib/utils";
-import { useSubtaskStore } from "@/stores/useSubtasksStore";
-import type { Subtask } from "@/types/task";
 import { Trash } from "lucide-react";
-import { usePatchSubtaskMutation } from "../hooks/mutations/usePatchSubtaskMutation";
 import { toast } from "sonner";
+import type { Subtask } from "@/types/task";
 
 type Props = {
   subtask: Subtask;
@@ -12,15 +12,13 @@ type Props = {
 };
 
 export default function SubtaskItem({ task_id, subtask }: Props) {
-  // THIS WILL BE A FUNCTION THAT TRIGGERS A PATCH REQUEST FOR TOGGLING is_done FIELD IN THE SERVER
-  const { mutate: toggleSubtask, error } = usePatchSubtaskMutation(
-    task_id,
-    subtask.subtask_id
-  );
+  const { mutate: toggleSubtask, error: editSubtaskError } =
+    usePatchSubtaskMutation(task_id, subtask.subtask_id);
+  const { mutate: deleteSubtask, error: deleteSubtaskError } =
+    useDeleteSubtaskMutation(task_id);
 
-  const deleteSubtask = useSubtaskStore((state) => state.deleteSubtask);
-
-  if (error) toast(error.message);
+  if (editSubtaskError || deleteSubtaskError)
+    toast((editSubtaskError ?? deleteSubtaskError)?.message);
 
   return (
     <li key={subtask.subtask_id} className="group flex items-center gap-2 px-4">

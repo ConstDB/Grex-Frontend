@@ -22,3 +22,9 @@ export const editSubtask = async (
 ) => {
   await api.patch(`/task/${task_id}/subtask/${subtask_id}`, payload);
 };
+
+export const deleteSubtask = async (task_id: number, subtask_id: number) => {
+  await api.delete(`/task/${task_id}/subtask/${subtask_id}`, {
+    data: { task_id, subtask_id },  
+  });
+};
