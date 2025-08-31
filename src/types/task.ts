@@ -35,13 +35,15 @@ export type TaskGroups = {
 };
 
 export interface NewSubtask {
-  task_id: number;
+  // task_id: number;
   description: string;
-  is_done: boolean;
+  // is_done: boolean;
 }
 
 export interface Subtask extends NewSubtask {
   subtask_id: number;
+  task_id: number;
+  is_done: boolean;
   created_at: Date;
 }
 

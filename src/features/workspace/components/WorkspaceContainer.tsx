@@ -10,11 +10,6 @@ import { useParams } from "react-router";
 import PageLoader from "@/components/PageLoader";
 
 export default function WorkspaceContainer() {
-  // TODO: Actual data fetching for the selected project
-  // endpoint -> /workspace/${workspace_id}/${user_id}
-  // query keys = ["workspace", { workspace_id }]
-
-  // const project = MOCK_SPECIFIC_WORKSPACE;
   const { user } = useAuth();
   const { workspace_id } = useParams();
   const {
@@ -22,7 +17,6 @@ export default function WorkspaceContainer() {
     isPending,
     error,
   } = useFetchWorkspaceQuery(Number(workspace_id), user?.user_id);
-  // const project = projects.find((p) => p.workspace_id === Number(workspace_id));
 
   if (isPending) return <PageLoader />;
   if (error) return <div className="text-error">{error.message}</div>; // temporary
