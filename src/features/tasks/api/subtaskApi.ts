@@ -24,7 +24,5 @@ export const editSubtask = async (
 };
 
 export const deleteSubtask = async (task_id: number, subtask_id: number) => {
-  await api.delete(`/task/${task_id}/subtask/${subtask_id}`, {
-    data: { task_id, subtask_id },  
-  });
+  await api.delete(`/task/${task_id}/subtask/${subtask_id}`);
 };

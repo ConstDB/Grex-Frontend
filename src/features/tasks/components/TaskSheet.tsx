@@ -1,26 +1,26 @@
+import PageLoader from "@/components/PageLoader";
+import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
   Sheet,
+  SheetContent,
   SheetDescription,
+  SheetFooter,
   SheetHeader,
   SheetTitle,
   SheetTrigger,
-  SheetContent,
-  SheetFooter,
 } from "@/components/ui/sheet";
+import { useTaskStore } from "@/stores/useTasksStore";
 import type { Task } from "@/types/task";
 import { useState, type PropsWithChildren } from "react";
-import SubtaskList from "./SubtaskList";
-import TaskMetaSection from "./TaskMetaSection";
-import { Input } from "@/components/ui/input";
-import TaskComments from "./TaskComments";
-import { useTaskStore } from "@/stores/useTasksStore";
-import TaskMenu from "./TaskMenu";
-import EditTask from "./EditTask";
+import { toast } from "sonner";
 import { useCreateSubtaskMutation } from "../hooks/mutations/useCreateSubtaskMutation";
 import { useFetchSubtasksQuery } from "../hooks/queries/useFetchSubtasksQuery";
-import PageLoader from "@/components/PageLoader";
-import { toast } from "sonner";
+import EditTask from "./EditTask";
+import SubtaskList from "./SubtaskList";
+import TaskComments from "./TaskComments";
+import TaskMenu from "./TaskMenu";
+import TaskMetaSection from "./TaskMetaSection";
 
 type Props = PropsWithChildren & {
   task: Task;

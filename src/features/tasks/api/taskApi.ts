@@ -1,5 +1,5 @@
 import api from "@/lib/axios";
-import type { NewTask, Task } from "@/types/task";
+import type { EditableTaskFields, NewTask, Task } from "@/types/task";
 
 export const createTask = async (
   newTask: NewTask,
@@ -11,5 +11,22 @@ export const createTask = async (
 
 export const getTasks = async (workspace_id: number): Promise<Task[]> => {
   const { data } = await api.get<Task[]>(`/tasks/${workspace_id}`);
+  return data;
+};
+
+export const editTask = async (
+  workspace_id: number,
+  task_id: number,
+  payload: EditableTaskFields
+): Promise<Task> => {
+  const updated = {
+    ...payload,
+    deadline: payload.deadline.toISOString().split("T")[0],
+  };
+  const { data } = await api.patch<Task>(
+    `/tasks/${workspace_id}/${task_id}`,
+    updated
+  );
+
   return data;
 };
