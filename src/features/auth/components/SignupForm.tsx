@@ -1,4 +1,4 @@
-import { Form, Formik, type FormikErrors } from "formik";
+import { Form, Formik } from "formik";
 import type { IUserCredentials } from "../types/auth";
 import { UserSchema } from "@/schemas/authSchema";
 import FormField from "./FormField";
@@ -7,15 +7,15 @@ import { CiMail, CiLock } from "react-icons/ci";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Link, useNavigate } from "react-router";
-import { Loader2 } from "lucide-react";
+import { AlertCircleIcon, Loader2 } from "lucide-react";
 import api from "@/lib/axios";
 import axios from "axios";
 import SocialButtonsContainer from "./SocialButtonsContainer";
 import { useAuth } from "@/context/auth-context";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 export interface CreateAccountHandler {
   values: IUserCredentials;
-  setErrors: (errors: FormikErrors<IUserCredentials>) => void;
 }
 
 const initialValues: IUserCredentials = {
@@ -29,13 +29,11 @@ const initialValues: IUserCredentials = {
 export default function SignupForm() {
   const [isLoading, setIsLoading] = useState(false);
   const { setToken, setUser } = useAuth();
+  const [serverError, setServerError] = useState("");
 
   const navigate = useNavigate();
 
-  const handleAccountCreation = async ({
-    values,
-    setErrors,
-  }: CreateAccountHandler) => {
+  const handleAccountCreation = async (values: IUserCredentials) => {
     setIsLoading(true);
 
     const userCredentials = {
@@ -53,8 +51,13 @@ export default function SignupForm() {
     } catch (error) {
       if (axios.isAxiosError(error)) {
         const serverMessage =
-          error.response?.data?.message || "Account creation failed.";
-        setErrors(serverMessage);
+          error.response?.data?.detail || "Account creation failed.";
+
+        setServerError(serverMessage);
+      } else if (error instanceof Error) {
+        setServerError(error.message);
+      } else {
+        console.error(error);
       }
     } finally {
       setIsLoading(false);
@@ -78,9 +81,7 @@ export default function SignupForm() {
       <Formik
         initialValues={initialValues}
         validationSchema={UserSchema}
-        onSubmit={(values, { setErrors }) =>
-          handleAccountCreation({ values, setErrors })
-        }
+        onSubmit={(values) => handleAccountCreation(values)}
       >
         {({ handleSubmit }) => (
           <Form onSubmit={handleSubmit}>
@@ -125,6 +126,14 @@ export default function SignupForm() {
                 placeholder="Create Password (min. 8 characters)"
                 Icon={CiLock}
               />
+
+              {serverError && (
+                <Alert variant="destructive">
+                  <AlertCircleIcon />
+                  <AlertTitle>Failed to create account</AlertTitle>
+                  <AlertDescription>{serverError}</AlertDescription>
+                </Alert>
+              )}
 
               <Button
                 disabled={isLoading}

@@ -8,9 +8,9 @@ export const useDeleteSubtaskMutation = (task_id: number) => {
   return useMutation({
     mutationFn: (subtask_id: number) => deleteSubtask(task_id, subtask_id),
     onSuccess: (_, subtask_id) => {
-      queryClient.setQueryData<Subtask[]>(["subtasks", { task_id }], (old) => {
-        if (!old) return old;
-        return old.filter((s) => s.subtask_id !== subtask_id);
+      queryClient.setQueryData<Subtask[]>(["subtasks", { task_id }], (cache) => {
+        if (!cache) return cache;
+        return cache.filter((s) => s.subtask_id !== subtask_id);
       });
     },
   });

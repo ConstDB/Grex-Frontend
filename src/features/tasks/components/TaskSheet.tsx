@@ -10,11 +10,12 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
-import { useTaskStore } from "@/stores/useTasksStore";
 import type { Task } from "@/types/task";
 import { useState, type PropsWithChildren } from "react";
+import { useParams } from "react-router";
 import { toast } from "sonner";
 import { useCreateSubtaskMutation } from "../hooks/mutations/useCreateSubtaskMutation";
+import { useDeleteTaskMutation } from "../hooks/mutations/useDeleteTaskMutation";
 import { useFetchSubtasksQuery } from "../hooks/queries/useFetchSubtasksQuery";
 import EditTask from "./EditTask";
 import SubtaskList from "./SubtaskList";
@@ -32,13 +33,15 @@ export default function TaskSheet({ children, task }: Props) {
   const [showMenu, setShowMenu] = useState(false);
   const [isEditting, setIsEdditing] = useState(false);
 
+  const { workspace_id } = useParams();
+
+  const { mutate: deleteTask } = useDeleteTaskMutation(Number(workspace_id));
   const { mutate } = useCreateSubtaskMutation(task.task_id);
   const {
     data: subtasks,
     isPending,
     error,
   } = useFetchSubtasksQuery(task.task_id);
-  const deleteTask = useTaskStore((state) => state.deleteTask); // REQUEST FOR DELETE TASK
 
   const handleAddSubtask = () => {
     mutate({ description: newSubtask });
