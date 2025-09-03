@@ -1,3 +1,13 @@
+import ChatHeader from "./ChatHeader";
+import ChatInput from "./ChatInput";
+import ChatMessageList from "./ChatMessageList";
+
 export default function ChatContainer() {
-  return <div>Chat Container</div>;
+  return (
+    <div className="bg-dark-surface border border-dark-muted rounded-sm relative shadow h-full flex flex-col flex-1 max-w-[60%]">
+      <ChatHeader />
+      <ChatMessageList />
+      <ChatInput />
+    </div>
+  );
 }
