@@ -1,6 +1,10 @@
 import UserAvatar from "@/components/UserAvatar";
 import type { ChatMessage } from "@/types/chat";
-import { getRandomUserImage } from "@/utils";
+import {
+  formatChatDate,
+  isIncomingChatMessage,
+  isMessageHistoryItem,
+} from "@/utils";
 import { LuDot } from "react-icons/lu";
 
 type Props = {
@@ -14,6 +18,14 @@ export default function ChatMessageItem({
   showMetadata,
   isUsersMessage,
 }: Props) {
+  let photoUrl: string | null = null;
+
+  if (isIncomingChatMessage(message)) {
+    photoUrl = message.avatar;
+  } else if (isMessageHistoryItem(message)) {
+    photoUrl = message.profile_picture;
+  }
+
   return (
     <div className={`w-full flex px-4 ${isUsersMessage && "justify-end"}`}>
       <div
@@ -26,8 +38,8 @@ export default function ChatMessageItem({
             {showMetadata && (
               <UserAvatar
                 className="size-8"
-                name="Jonel Villaver"
-                photoUrl={getRandomUserImage()}
+                name={message.nickname}
+                photoUrl={photoUrl ?? undefined}
               />
             )}
           </div>
@@ -42,7 +54,7 @@ export default function ChatMessageItem({
             <div className="text-dark-subtle flex space-x-1 items-center text-sm mb-1">
               <span>{message.nickname}</span>
               <LuDot />
-              <span>10:32 pm</span>
+              <span>{formatChatDate(message.sent_at)}</span>
             </div>
           )}
           <div className="flex space-x-2.5">
