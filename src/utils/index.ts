@@ -1,4 +1,10 @@
 import type { CalendarEvent } from "@/types";
+import type {
+  ChatMessage,
+  IncomingChatMessage,
+  MessageHistoryItem,
+  PendingChatMessage,
+} from "@/types/chat";
 import type { Task, TaskPriority, TaskGroups, Subtask } from "@/types/task";
 
 // MOCK USER IMAGES FOR TESTING
@@ -140,3 +146,83 @@ export const mapTasksToEvents = (tasks: Task[]): CalendarEvent[] => {
     };
   });
 };
+
+export const normalizeHistoryItem = (
+  item: MessageHistoryItem
+): IncomingChatMessage => {
+  return {
+    message_id: item.message_id,
+    workspace_id: item.workspace_id,
+    sender_id: item.sender_id,
+    avatar: item.profile_picture,
+    nickname: item.nickname,
+    type: item.message_type as "text" | "file" | "poll",
+    content: item.content,
+    reply_to: item.reply_to,
+    sent_at: item.sent_at,
+  };
+};
+
+export function isIncomingChatMessage(
+  msg: ChatMessage
+): msg is IncomingChatMessage {
+  return "message_id" in msg;
+}
+
+export function isPendingChatMessage(
+  msg: ChatMessage
+): msg is PendingChatMessage {
+  return "temp_id" in msg;
+}
+
+export function isMessageHistoryItem(
+  msg: ChatMessage
+): msg is MessageHistoryItem {
+  return "message_type" in msg;
+}
+
+export function formatChatDate(dateString: string): string {
+  const date = new Date(dateString);
+  const now = new Date();
+
+  const isToday =
+    date.getDate() === now.getDate() &&
+    date.getMonth() === now.getMonth() &&
+    date.getFullYear() === now.getFullYear();
+
+  const isYesterday =
+    date.getDate() === now.getDate() - 1 &&
+    date.getMonth() === now.getMonth() &&
+    date.getFullYear() === now.getFullYear();
+
+  const options: Intl.DateTimeFormatOptions = {
+    hour: "numeric",
+    minute: "numeric",
+    hour12: true,
+  };
+
+  if (isToday) {
+    return date.toLocaleTimeString(undefined, options);
+  }
+
+  if (isYesterday) {
+    return `Yesterday at ${date.toLocaleTimeString(undefined, options)}`;
+  }
+
+  if (date.getFullYear() === now.getFullYear()) {
+    return (
+      date.toLocaleDateString(undefined, {
+        month: "short",
+        day: "numeric",
+      }) + ` at ${date.toLocaleTimeString(undefined, options)}`
+    );
+  }
+
+  return (
+    date.toLocaleDateString(undefined, {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+    }) + ` at ${date.toLocaleTimeString(undefined, options)}`
+  );
+}
