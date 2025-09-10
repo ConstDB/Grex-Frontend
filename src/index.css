@@ -21,7 +21,6 @@
   font-family: "karla" !important;
 }
 
-
 .sx__week-header {
   background-color: rgba(64, 64, 64, 0.1) !important;
 }
@@ -48,7 +47,7 @@
 }
 
 .sx__month-grid-day {
-  height: 200px !important;
+  height: 140px !important;
   background-color: transparent !important;
   color: #f2f2f2;
   border-right: 1px solid #404040 !important;
@@ -134,6 +133,20 @@
 
 .sx__view-container {
   background-color: rgba(64, 64, 64, 0.1) !important;
+}
+
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+.no-scrollbar {
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.thin-scrollbar {
+  scrollbar-width: thin; /* For Firefox */
+  scrollbar-color: #ccc transparent; /* For Firefox */
 }
 
 @custom-variant dark (&:is(.dark *));
