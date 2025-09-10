@@ -1,10 +1,8 @@
 import PageLoader from "@/components/PageLoader";
-import { Input } from "@/components/ui/input";
 import type { TaskGroups } from "@/types/task";
 import { groupTasksByStatus } from "@/utils";
 import type { DropResult } from "@hello-pangea/dnd";
 import { DragDropContext } from "@hello-pangea/dnd";
-import { Search } from "lucide-react";
 import { useMemo } from "react";
 import { useParams } from "react-router";
 import { toast } from "sonner";
@@ -53,31 +51,7 @@ export default function KanbanContainer() {
 
   return (
     <DragDropContext onDragEnd={handleDragEnd}>
-      <div className="flex justify-between items-center my-2">
-        {/* <div className="flex space-x-2">
-          <NewTaskModal>
-            <Button className="text-sm bg-brand-primary hover:bg-brand-dark">
-              <GoPlus />
-              <span>Add New Task</span>
-            </Button>
-          </NewTaskModal>
-
-          <Button className="bg-dark-muted hover:bg-dark-surface text-dark-text border border-dark-muted">
-            <CiFilter />
-            <span>Filter</span>
-          </Button>
-          <Button className="bg-dark-muted hover:bg-dark-surface text-dark-text border border-dark-muted">
-            <BsSortDownAlt />
-            <span>Sort by</span>
-          </Button>
-        </div> */}
-
-        <div className="relative">
-          <Input className="pl-8" />
-          <Search className="text-dark-subtle absolute top-2 left-2 size-5" />
-        </div>
-      </div>
-      <div className="w-full flex space-x-4">
+      <div className="w-full flex space-x-4 h-full">
         {isPending && (
           <div className="flex-1 flex justify-center items-center">
             <PageLoader />

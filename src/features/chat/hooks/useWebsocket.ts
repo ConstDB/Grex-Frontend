@@ -47,8 +47,9 @@ class WebSocketManager {
 
     try {
       const protocol = window.location.protocol === "https:" ? "wss:" : "ws:";
-      const wsUrl = `${protocol}//localhost:8000/workspace/${workspaceId}/${userId}`;
-
+      const token = localStorage.getItem("access_token");
+      const wsUrl = `${protocol}//localhost:8000/workspace/${workspaceId}/${userId}?token=${token}`;
+      
       this.ws = new WebSocket(wsUrl);
       this.connectionCount = 1;
 
@@ -61,6 +62,7 @@ class WebSocketManager {
       this.ws.onmessage = (event) => {
         try {
           const message: IncomingChatMessage = JSON.parse(event.data);
+          useChatStore.getState().addMessage(message);
           this.listeners.forEach((listener) => listener(message));
         } catch (error) {
           console.error("Error parsing WebSocket message:", error);

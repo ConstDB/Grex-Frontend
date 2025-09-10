@@ -11,6 +11,7 @@ import { TbLayoutKanbanFilled } from "react-icons/tb";
 import { useParams } from "react-router";
 import { useFetchWorkspaceQuery } from "../hooks/queries/useFetchWorkspaceQuery";
 import CalendarContainer from "./CalendarContainer";
+import WorkspaceHeader from "./WorkspaceHeader";
 
 export default function WorkspaceContainer() {
   const { user } = useAuth();
@@ -26,9 +27,11 @@ export default function WorkspaceContainer() {
   if (!project) return; // TODO: Better fallback
 
   return (
-    <div className=" rounded-sm p-4 max-h-screen h-full w-full overflow-y-clip">
-      <div className=" h-full">
-        <Tabs className="h-full" defaultValue="Kanban">
+    <div className="bg-dark-surface border border-dark-muted rounded-sm m-8 h-[850px]">
+      <WorkspaceHeader />
+
+      <div className="px-7">
+        <Tabs className="" defaultValue="Kanban">
           <TabsList className="border border-dark-muted">
             <TabsTrigger value="Overview">
               <HiOutlineClipboardDocumentList />

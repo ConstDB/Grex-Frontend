@@ -27,7 +27,7 @@ export default function MainHeader() {
             const isLast = lastIndex === index;
 
             return (
-              <div key={path}>
+              <div key={path} className="flex space-x-2 items-center">
                 <BreadcrumbItem
                   className={`${isLast && "font-semibold text-dark-text"}`}
                 >

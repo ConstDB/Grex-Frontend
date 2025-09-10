@@ -14,4 +14,3 @@ export const useUserSearch = (name: string) => {
   });
 };
 
-export const useInviteUser = () => {};

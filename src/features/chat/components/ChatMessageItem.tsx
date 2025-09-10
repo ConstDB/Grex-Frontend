@@ -51,9 +51,13 @@ export default function ChatMessageItem({
           }`}
         >
           {showMetadata && (
-            <div className="text-dark-subtle flex space-x-1 items-center text-sm mb-1">
-              <span>{message.nickname}</span>
-              <LuDot />
+            <div className="text-dark-subtle flex space-x-1 items-center text-xs mb-1">
+              {!isUsersMessage && (
+                <>
+                  <span>{message.nickname}</span>
+                  <LuDot />
+                </>
+              )}
               <span>{formatChatDate(message.sent_at)}</span>
             </div>
           )}

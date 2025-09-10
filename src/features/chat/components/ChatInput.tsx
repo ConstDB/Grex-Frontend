@@ -83,7 +83,7 @@ export default function ChatInput() {
   );
 
   return (
-    <div className="bg-muted mx-2 rounded-md p-2 flex flex-col gap-2 relative">
+    <div className="bg-muted mx-2 mb-2 rounded-md p-2 flex flex-col gap-2 relative">
       <textarea
         ref={textareaRef}
         className="w-full resize-none border-none bg-muted shadow-none focus-visible:ring-0 focus:outline-none rounded-md p-2 min-h-[2.5rem] max-h-32 overflow-y-auto"

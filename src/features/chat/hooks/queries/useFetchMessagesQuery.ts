@@ -16,7 +16,8 @@ export const useFetchMessagesQuery = (workspaceId: number) => {
     getNextPageParam: (lastPage) => {
       // if we got less than 30, means no more messages
       if (lastPage.length < 30) return undefined;
-      return lastPage[lastPage.length - 1].message_id;
+      console.log(lastPage[0].message_id);
+      return lastPage[0].message_id;
     },
     getPreviousPageParam: (firstPage) => {
       return firstPage.length > 0 ? firstPage[0].message_id : undefined;

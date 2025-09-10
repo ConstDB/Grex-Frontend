@@ -26,7 +26,6 @@ export default function ChatMessageList() {
     isFetchingNextPage,
     status,
   } = useFetchMessagesQuery(workspaceId);
-
   // Memoize flattened messages to prevent unnecessary re-renders
   const fetchedMessages = useMemo(() => {
     return data?.pages?.flat() ?? [];
@@ -34,6 +33,7 @@ export default function ChatMessageList() {
 
   // Combine fetched messages with real-time messages from store
   // Remove duplicates based on message_id
+
   const allMessages = useMemo(() => {
     const combined = [...fetchedMessages, ...messages];
     const uniqueMessages = combined.reduce((acc, message) => {
@@ -155,7 +155,7 @@ export default function ChatMessageList() {
   return (
     <div
       ref={containerRef}
-      className="flex-1 flex flex-col gap-2 max-h-[690px] overflow-y-scroll py-4"
+      className="flex-1 flex flex-col gap-2 max-h-[540px] overflow-y-scroll py-4"
     >
       {/* Loading indicator at the top */}
       {isFetchingNextPage && (
@@ -171,7 +171,7 @@ export default function ChatMessageList() {
         </div>
       )}
 
-      {allMessages.map((message, index) => {
+      {messages.map((message, index) => {
         const isUsersMessage = message.sender_id === user?.user_id;
         const prevMsg = allMessages[index - 1];
         const showMetadata =

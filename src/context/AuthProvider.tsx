@@ -74,10 +74,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
       setToken(response.data.access_token);
       setUser(response.data.user);
       localStorage.setItem("user", JSON.stringify(response.data.user));
-      localStorage.setItem(
-        "access_token",
-        JSON.stringify(response.data.access_token)
-      );
+      localStorage.setItem("access_token", response.data.access_token);
     } catch (error) {
       throw new Error(
         `Login failed, please check your credentials. \nError: ${
