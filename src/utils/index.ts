@@ -5,7 +5,13 @@ import type {
   MessageHistoryItem,
   PendingChatMessage,
 } from "@/types/chat";
-import type { Task, TaskPriority, TaskGroups, Subtask } from "@/types/task";
+import type {
+  Task,
+  TaskPriority,
+  Subtask,
+  Category,
+  TaskGroups,
+} from "@/types/task";
 
 // MOCK USER IMAGES FOR TESTING
 const USER_IMAGES = [
@@ -55,18 +61,21 @@ export const getTypeColor = (type: string): string => {
   }
 };
 
-export const groupTasksByStatus = (tasks: Task[]) => {
-  return tasks.reduce<TaskGroups>(
-    (groups, task) => {
-      groups[task.status].push(task);
-      return groups;
-    },
-    {
-      pending: [],
-      done: [],
-      overdue: [],
+export const groupTasksByCategory = (tasks: Task[], categories: Category[]) => {
+  const groups: TaskGroups = categories.reduce((acc, cat) => {
+    acc[cat.name] = [];
+    return acc;
+  }, {} as TaskGroups);
+
+  for (const task of tasks) {
+    if (groups[task.category]) {
+      groups[task.category].push(task);
+    } else {
+      groups[task.category] = [task];
     }
-  );
+  }
+
+  return groups;
 };
 
 export const getPrioLevelStyle = (priority_level: TaskPriority) => {
@@ -134,7 +143,7 @@ export const getRandomUserImage = (): string => {
 
 export const mapTasksToEvents = (tasks: Task[]): CalendarEvent[] => {
   return tasks.map((task) => {
-    const start = new Date(task.created_at).toISOString().split("T")[0];
+    const start = new Date(task.start_date).toISOString().split("T")[0];
     const end = new Date(task.deadline).toISOString().split("T")[0];
 
     return {
@@ -226,3 +235,12 @@ export function formatChatDate(dateString: string): string {
     }) + ` at ${date.toLocaleTimeString(undefined, options)}`
   );
 }
+
+export const formatDateForAPI = (
+  date: Date | string | undefined
+): string | undefined => {
+  if (!date) return undefined;
+  if (typeof date === "string") return date;
+  if (date instanceof Date) return date.toISOString().split("T")[0];
+  return undefined;
+};

@@ -1,7 +1,7 @@
 import type { Task } from "@/types/task";
-import { capitalizeWord, getTypeColor } from "@/utils";
-import { VscKebabVertical } from "react-icons/vsc";
-import { Droppable, Draggable } from "@hello-pangea/dnd";
+import { capitalizeWord } from "@/utils";
+import { Draggable, Droppable } from "@hello-pangea/dnd";
+import { GoKebabHorizontal } from "react-icons/go";
 import KanbanTask from "./KanbanTask";
 
 interface Props {
@@ -13,20 +13,16 @@ export default function KanbanColumn({ type, tasks }: Props) {
   // TODO: Better fallback for this
 
   return (
-    <div className="w-full max-w-[600px] h-[750px] max-h-[750px] rounded bg p-4">
-      <div className="flex justify-between sticky top-2 border-b border-b-dark-muted">
-        <div className="flex items-center space-x-2 my-2">
-          <div className={`size-3 rounded-full  ${getTypeColor(type)}`} />
-          <span className="text-lg">{capitalizeWord(type)}</span>
+    <div className="w-full min-w-[350px] max-w-[350px] mt-4 h-auto max-h-[750px] rounded">
+      <div className="flex justify-between sticky top-2">
+        <div className="flex items-center space-x-2 mb-4">
+          <span className="text-lg font-semibold">{capitalizeWord(type)}</span>
           <div className="size-6  rounded-full text-center font-semibold">
-            <span className="text-sm">{tasks.length}</span>
+            <span className="text-sm text-dark-subtle">{tasks.length}</span>
           </div>
         </div>
-
-        <div className="flex space-x-2">
-          <button>
-            <VscKebabVertical />
-          </button>
+        <div>
+          <GoKebabHorizontal />
         </div>
       </div>
 
@@ -35,9 +31,9 @@ export default function KanbanColumn({ type, tasks }: Props) {
           <div
             ref={provided.innerRef}
             {...provided.droppableProps}
-            className={`max-h-[650px] overflow-y-scroll ${
+            className={`min-h-[10px] max-h-[650px] overflow-y-auto no-scrollbar ${
               snapshot.isDraggingOver
-                ? "bg-[#2e2e2e] border-2 border-brand-primary"
+                ? "bg-transparent border-2 border-brand-primary"
                 : ""
             } transition-all duration-200`}
           >

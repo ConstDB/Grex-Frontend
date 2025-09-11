@@ -23,6 +23,7 @@ export default function SubtaskItem({ task_id, subtask }: Props) {
   return (
     <li key={subtask.subtask_id} className="group flex items-center gap-2 px-4">
       <Checkbox
+        className="rounded-sm"
         checked={subtask.is_done}
         onCheckedChange={() => toggleSubtask({ is_done: !subtask.is_done })}
       />

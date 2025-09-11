@@ -6,7 +6,7 @@ import { Clock, Flag } from "lucide-react";
 
 export default function TaskFields({ task }: { task: Task }) {
   return (
-    <div className="grid grid-cols-2 gap-4 items-center">
+    <div className="max-w-[400px] grid grid-cols-2 gap-4 items-center">
       <div className="self-start">
         <Label className="text-base">Fields</Label>
       </div>
