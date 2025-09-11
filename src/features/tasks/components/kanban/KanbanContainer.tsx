@@ -21,15 +21,9 @@ export default function KanbanContainer() {
   );
   const { workspace_id } = useParams();
   const { data: categories } = useFetchCategoryQuery(Number(workspace_id));
-  const {
-    data: tasks,
-    isPending,
-    error,
-  } = useFetchTasksQuery(Number(workspace_id));
+  const { data: tasks, isPending } = useFetchTasksQuery(Number(workspace_id));
 
   const { mutate: editTask } = usePatchTaskMutation(Number(workspace_id));
-
-  if (error) toast(error.message);
 
   const positions = useMemo(
     () => groupTasksByCategory(tasks ?? [], categories ?? []),
@@ -79,7 +73,7 @@ export default function KanbanContainer() {
 
   return (
     <DragDropContext onDragEnd={handleDragEnd}>
-      <div className="max-w-[1500px] no-scrollbar w-full flex space-x-4 h-full">
+      <div className="max-w-[1500px] overflow-x-auto no-scrollbar w-full flex space-x-4 h-full">
         {isPending && (
           <div className="flex-1 flex justify-center items-center">
             <PageLoader />
