@@ -21,15 +21,9 @@ export default function KanbanContainer() {
   );
   const { workspace_id } = useParams();
   const { data: categories } = useFetchCategoryQuery(Number(workspace_id));
-  const {
-    data: tasks,
-    isPending,
-    error,
-  } = useFetchTasksQuery(Number(workspace_id));
+  const { data: tasks, isPending } = useFetchTasksQuery(Number(workspace_id));
 
   const { mutate: editTask } = usePatchTaskMutation(Number(workspace_id));
-
-  if (error) toast(error.message);
 
   const positions = useMemo(
     () => groupTasksByCategory(tasks ?? [], categories ?? []),

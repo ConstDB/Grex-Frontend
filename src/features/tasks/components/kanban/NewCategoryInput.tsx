@@ -15,15 +15,12 @@ export default function NewCategoryInput({ onCancel, category }: Props) {
   const [newCategory, setNewCategory] = useState(category ?? "");
 
   const { workspace_id } = useParams();
+  const workspaceId = Number(workspace_id);
 
-  const { data: categories = [] } = useFetchCategoryQuery(Number(workspace_id));
-  const { mutate: createCategory, error } = useCreateCategoryMutation(
-    Number(workspace_id)
-  );
-
-  const { mutate: editCategory } = useEditCategoryMutation(
-    Number(workspace_id)
-  );
+  const { data: categories = [] } = useFetchCategoryQuery(workspaceId);
+  const { mutate: editCategory } = useEditCategoryMutation(workspaceId);
+  const { mutate: createCategory, error } =
+    useCreateCategoryMutation(workspaceId);
 
   const handleSubmit = () => {
     // this means the user only wants to edit

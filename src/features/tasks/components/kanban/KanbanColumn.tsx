@@ -35,12 +35,14 @@ export default function KanbanColumn({ type, tasks }: Props) {
             onCancel={() => setIsEditingCategory(false)}
           />
         ) : (
-          <CategoryDropdown
-            onEdit={() => setIsEditingCategory(true)}
-            category={type}
-          >
-            <GoKebabHorizontal />
-          </CategoryDropdown>
+          <button>
+            <CategoryDropdown
+              onEdit={() => setIsEditingCategory(true)}
+              category={type}
+            >
+              <GoKebabHorizontal />
+            </CategoryDropdown>
+          </button>
         )}
       </div>
 
