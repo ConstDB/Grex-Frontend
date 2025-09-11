@@ -28,6 +28,8 @@ export type EditableTaskFields = {
   start_date: Date;
   priority_level: TaskPriority;
   category?: string;
+  status?: TaskStatus;
+  marked_done_at?: Date | null;
 };
 
 export type EditTaskPayload = EditableTaskFields & { task_id: number };

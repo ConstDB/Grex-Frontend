@@ -13,11 +13,13 @@ import { BiCommentDetail } from "react-icons/bi";
 import { CiCalendar } from "react-icons/ci";
 import { IoDocumentAttachOutline } from "react-icons/io5";
 import { RiDraggable } from "react-icons/ri";
-import { toast } from "sonner";
 import { useFetchSubtasksQuery } from "../../hooks/queries/useFetchSubtasksQuery";
 import { useFetchTaskAssigneesQuery } from "../../hooks/queries/useFetchTaskAssigneesQuery";
 import SubtaskList from "../SubtaskList";
 import TaskSheet from "../TaskSheet";
+import { editTask } from "../../api/taskApi";
+import { useParams } from "react-router";
+import { toast } from "sonner";
 
 type Props = {
   task: Task;
@@ -30,11 +32,9 @@ export default function KanbanTask({
   isDragging,
   dragHandleProps,
 }: Props) {
-  const {
-    data: subtasks,
-    isPending,
-    error,
-  } = useFetchSubtasksQuery(task.task_id);
+  const { workspace_id } = useParams();
+
+  const { data: subtasks, isPending } = useFetchSubtasksQuery(task.task_id);
   const { data: assignees } = useFetchTaskAssigneesQuery(task.task_id);
 
   const assigneesInfo = assignees?.map((a) => ({
@@ -42,7 +42,16 @@ export default function KanbanTask({
     name: a.name,
   }));
 
-  if (error) toast(error.message);
+  const progressPercentage = getProgressPercentage(subtasks ?? []);
+
+  if (progressPercentage === 100 && task.status !== "done") {
+    editTask(Number(workspace_id), task.task_id, {
+      marked_done_at: new Date(),
+      status: "done",
+    });
+
+    toast.success("Task completed!");
+  }
 
   return (
     <div
@@ -58,6 +67,7 @@ export default function KanbanTask({
         >
           {capitalizeWord(task.priority_level)}
         </div>
+
         <div {...(dragHandleProps || {})}>
           <RiDraggable className="size-6 text-dark-text" />
         </div>
@@ -69,13 +79,18 @@ export default function KanbanTask({
             {task.title}
           </h3>
         </TaskSheet>
+
         <p className="text-dark-subtle text-sm">{task.subject}</p>
+
         <div className="text-dark-subtle flex space-x-1 items-center text-xs my-2">
           <CiCalendar className="size-4" />
           <p>{formatDate(task.deadline)}</p>
         </div>
+
         <div className="p-2">
-          <p className="text-sm text-white/70 line-clamp-3 text-wrap">{task.description}</p>
+          <p className="text-sm text-white/70 line-clamp-3 text-wrap">
+            {task.description}
+          </p>
         </div>
       </div>
 
@@ -102,12 +117,10 @@ export default function KanbanTask({
       <div className="mt-2">
         <div className="flex justify-between my-1 text-sm">
           <span className="text-dark-text">Progress</span>
-          <span className="text-dark-subtle">
-            {getProgressPercentage(subtasks ?? [])}%
-          </span>
+          <span className="text-dark-subtle">{progressPercentage}%</span>
         </div>
 
-        <Progress value={getProgressPercentage(subtasks ?? [])} />
+        <Progress value={progressPercentage} />
       </div>
     </div>
   );
