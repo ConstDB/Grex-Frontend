@@ -27,8 +27,8 @@ export default function WorkspaceContainer() {
   if (!project) return; // TODO: Better fallback
 
   return (
-    <div className="bg-dark-surface border border-dark-muted rounded-sm m-8 h-[850px]">
-      <WorkspaceHeader />
+    <div className="rounded-sm m-4 h-[850px]">
+      {/* <WorkspaceHeader /> */}
 
       <div className="px-7">
         <Tabs className="" defaultValue="Kanban">

@@ -18,9 +18,9 @@ export default function TaskWorkspace() {
   if (error) toast(error.message);
 
   return (
-    <div className="grid grid-cols-2 gap-4 items-center">
+    <div className="max-w-[400px] grid grid-cols-2 gap-4">
       <Label>Workspace</Label>
-      <p>{project?.name}</p>
+      <p className="line-clamp-2">{project?.name}</p>
     </div>
   );
 }

@@ -15,7 +15,7 @@ export default function TaskAssignees({ id }: { id: number }) {
   const length = assignees.length;
 
   return (
-    <div className="grid grid-cols-2 gap-4 items-center">
+    <div className="max-w-[400px] grid grid-cols-2 gap-4 items-center">
       <Label>Assignee/s</Label>
 
       {length === 0 && <p>No member assigned.</p>}

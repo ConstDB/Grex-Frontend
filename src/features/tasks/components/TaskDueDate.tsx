@@ -5,7 +5,7 @@ import { CiCalendar } from "react-icons/ci";
 
 export default function TaskDueDate({ task }: { task: Task }) {
   return (
-    <div className="grid grid-cols-2 gap-4 items-center">
+    <div className="max-w-[400px] grid grid-cols-2 gap-4 items-center">
       <Label>Due Date</Label>
       <div className="flex items-center space-x-4">
         <CiCalendar />

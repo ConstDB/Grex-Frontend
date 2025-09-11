@@ -1,4 +1,5 @@
 import PageLoader from "@/components/PageLoader";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import {
@@ -18,11 +19,12 @@ import { useCreateSubtaskMutation } from "../hooks/mutations/useCreateSubtaskMut
 import { useDeleteTaskMutation } from "../hooks/mutations/useDeleteTaskMutation";
 import { useFetchSubtasksQuery } from "../hooks/queries/useFetchSubtasksQuery";
 import EditTask from "./EditTask";
+import EditTaskAssignees from "./EditTaskAssignees";
 import SubtaskList from "./SubtaskList";
 import TaskComments from "./TaskComments";
 import TaskMenu from "./TaskMenu";
 import TaskMetaSection from "./TaskMetaSection";
-import EditTaskAssignees from "./EditTaskAssignees";
+import { Check } from "lucide-react";
 
 type Props = PropsWithChildren & {
   task: Task;
@@ -74,12 +76,18 @@ export default function TaskSheet({ children, task }: Props) {
             </div>
           </div>
         )}
+        <div className="min-h-17 border-b border-b-dark-muted flex items-center px-4">
+          <Button className="flex items-center bg-brand-primary hover:bg-brand-light">
+            <Check />
+            <span>Mark Completed</span>
+          </Button>
+        </div>
         {!isEditting && (
           <>
             <SheetHeader>
-              <div>
+              <div className="">
                 <div className="flex justify-between">
-                  <SheetTitle className="text-xl font-bold">
+                  <SheetTitle className="text-xl font-bold line-clamp-1">
                     {task.title}
                   </SheetTitle>
                   <TaskMenu
@@ -89,9 +97,11 @@ export default function TaskSheet({ children, task }: Props) {
                     onEditTask={handleEditTask}
                   />
                 </div>
-                <h3 className="text-dark-subtle text-medium">{task.subject}</h3>
+                <h3 className="text-dark-text text-medium line-clamp-1">
+                  {task.subject}
+                </h3>
               </div>
-              <SheetDescription className="mt-4 w-[90%]">
+              <SheetDescription className="mt-2 w-[90%] line-clamp-3">
                 {task.description}
               </SheetDescription>
 
