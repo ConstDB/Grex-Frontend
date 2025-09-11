@@ -79,7 +79,7 @@ export default function KanbanContainer() {
 
   return (
     <DragDropContext onDragEnd={handleDragEnd}>
-      <div className="max-w-[1500px] no-scrollbar w-full flex space-x-4 h-full">
+      <div className="max-w-[1500px] overflow-x-auto no-scrollbar w-full flex space-x-4 h-full">
         {isPending && (
           <div className="flex-1 flex justify-center items-center">
             <PageLoader />

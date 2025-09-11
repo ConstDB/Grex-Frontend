@@ -3,6 +3,9 @@ import { capitalizeWord } from "@/utils";
 import { Draggable, Droppable } from "@hello-pangea/dnd";
 import { GoKebabHorizontal } from "react-icons/go";
 import KanbanTask from "./KanbanTask";
+import CategoryDropdown from "../CategoryDropdown";
+import { useState } from "react";
+import NewCategoryInput from "./NewCategoryInput";
 
 interface Props {
   type: string;
@@ -10,20 +13,35 @@ interface Props {
 }
 
 export default function KanbanColumn({ type, tasks }: Props) {
-  // TODO: Better fallback for this
+  const [isEditingCategory, setIsEditingCategory] = useState(false);
 
   return (
     <div className="w-full min-w-[350px] max-w-[350px] mt-4 h-auto max-h-[750px] rounded">
       <div className="flex justify-between sticky top-2">
-        <div className="flex items-center space-x-2 mb-4">
-          <span className="text-lg font-semibold">{capitalizeWord(type)}</span>
-          <div className="size-6  rounded-full text-center font-semibold">
-            <span className="text-sm text-dark-subtle">{tasks.length}</span>
+        {!isEditingCategory && (
+          <div className="flex items-center space-x-2 mb-4">
+            <span className="text-lg font-semibold">
+              {capitalizeWord(type)}
+            </span>
+            <div className="size-6  rounded-full text-center font-semibold">
+              <span className="text-sm text-dark-subtle">{tasks.length}</span>
+            </div>
           </div>
-        </div>
-        <div>
-          <GoKebabHorizontal />
-        </div>
+        )}
+
+        {isEditingCategory ? (
+          <NewCategoryInput
+            category={type}
+            onCancel={() => setIsEditingCategory(false)}
+          />
+        ) : (
+          <CategoryDropdown
+            onEdit={() => setIsEditingCategory(true)}
+            category={type}
+          >
+            <GoKebabHorizontal />
+          </CategoryDropdown>
+        )}
       </div>
 
       <Droppable droppableId={type}>
