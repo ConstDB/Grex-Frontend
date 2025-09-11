@@ -19,6 +19,8 @@ export default function KanbanContainer() {
   const [activeNewCategory, setActiveNewCategory] = useState<string | null>(
     null
   );
+  const [isAddNewCategory, setIsAddNewCategory] = useState(false);
+
   const { workspace_id } = useParams();
   const { data: categories } = useFetchCategoryQuery(Number(workspace_id));
   const { data: tasks, isPending } = useFetchTasksQuery(Number(workspace_id));
@@ -64,7 +66,7 @@ export default function KanbanContainer() {
         },
       });
 
-      toast("Task moved to different category");
+      toast.success("Task moved to different category");
     } else {
       sourceColumn.splice(destination.index, 0, movedTask);
       toast("Order changed");
@@ -112,10 +114,17 @@ export default function KanbanContainer() {
             </div>
           ))}
 
-        <div className="min-w-[160px] mt-6 text-dark-subtle bg-dark-muted/30 rounded py-1 flex space-x-2 self-start justify-center items-center ">
-          <RxSection className="size-4 rotate-90" />
-          <span>Add Category</span>
-        </div>
+        {isAddNewCategory ? (
+          <NewCategoryInput onCancel={() => setIsAddNewCategory(false)} />
+        ) : (
+          <button
+            onClick={() => setIsAddNewCategory(true)}
+            className="min-w-[160px] mt-6 text-dark-subtle bg-dark-muted/30 rounded py-1 flex space-x-2 self-start justify-center items-center "
+          >
+            <RxSection className="size-4 rotate-90" />
+            <span>Add Category</span>
+          </button>
+        )}
       </div>
     </DragDropContext>
   );

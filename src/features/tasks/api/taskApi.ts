@@ -28,7 +28,8 @@ export const getTasks = async (workspace_id: number): Promise<Task[]> => {
 export const editTask = async (
   workspace_id: number,
   task_id: number,
-  payload: EditableTaskFields
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  payload: EditableTaskFields | Record<string, any>
 ): Promise<Task> => {
   const updated = {
     ...payload,
