@@ -5,11 +5,10 @@ import type {
   Project,
   UserWorkspacesResponse,
   WorkspacePayload,
+  EditProject,
 } from "@/types/project";
 
-export const createWorkspace = async (
-  workspace: NewProject
-): Promise<Project> => {
+export const createWorkspace = async (workspace: NewProject): Promise<Project> => {
   const payload: WorkspacePayload = {
     ...workspace,
     start_date: workspace.start_date.toISOString().split("T")[0],
@@ -21,23 +20,18 @@ export const createWorkspace = async (
   return data;
 };
 
-export const getWorkspaces = async (
-  user_id: number
-): Promise<UserWorkspacesResponse[]> => {
-  const { data } = await api.get<UserWorkspacesResponse[]>(
-    `/workspace/${user_id}`
-  );
+export const getWorkspaces = async (user_id: number): Promise<UserWorkspacesResponse[]> => {
+  const { data } = await api.get<UserWorkspacesResponse[]>(`/workspace/${user_id}`);
 
   return data;
 };
 
-export const getSelectedWorkspace = async (
-  workspace_id: number,
-  user_id: number
-): Promise<WorkspaceResponse> => {
-  const { data } = await api.get<WorkspaceResponse>(
-    `/workspace/${workspace_id}/${user_id}`
-  );
+export const getSelectedWorkspace = async (workspace_id: number, user_id: number): Promise<WorkspaceResponse> => {
+  const { data } = await api.get<WorkspaceResponse>(`/workspace/${workspace_id}/${user_id}`);
 
   return data;
+};
+
+export const editWorkspace = async (workspace_id: number, payload: EditProject): Promise<void> => {
+  await api.patch(`/workspace/${workspace_id}`, payload);
 };
