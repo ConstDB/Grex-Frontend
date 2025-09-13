@@ -1,17 +1,8 @@
 import api from "@/lib/axios";
-import type {
-  TaskAssignee,
-  EditableTaskFields,
-  NewTask,
-  Task,
-  Category,
-} from "@/types/task";
+import type { TaskAssignee, EditableTaskFields, NewTask, Task, Category } from "@/types/task";
 import { formatDateForAPI } from "@/utils";
 
-export const createTask = async (
-  newTask: NewTask,
-  workspace_id: number
-): Promise<void> => {
+export const createTask = async (newTask: NewTask, workspace_id: number): Promise<void> => {
   const payload = {
     ...newTask,
     start_date: newTask.start_date.toISOString().split("T")[0],
@@ -37,10 +28,7 @@ export const editTask = async (
     start_date: formatDateForAPI(payload.start_date),
   };
 
-  const { data } = await api.patch<Task>(
-    `/tasks/${workspace_id}/${task_id}`,
-    updated
-  );
+  const { data } = await api.patch<Task>(`/tasks/${workspace_id}/${task_id}`, updated);
   return data;
 };
 export const deleteTask = async (workspace_id: number, task_id: number) => {
@@ -51,9 +39,7 @@ export const addAssignee = async (task_id: number, user_id: number) => {
   await api.post(`/task/${task_id}/assignment/${user_id}`);
 };
 
-export const getAssignees = async (
-  task_id: number
-): Promise<TaskAssignee[]> => {
+export const getAssignees = async (task_id: number): Promise<TaskAssignee[]> => {
   const { data } = await api.get<TaskAssignee[]>(`/task/${task_id}/assignment`);
   return data;
 };
@@ -62,40 +48,23 @@ export const deleteAssignee = async (task_id: number, user_id: number) => {
   await api.delete(`/task/${task_id}/assignment/${user_id}`);
 };
 
-export const getCategories = async (
-  workspace_id: number
-): Promise<Category[]> => {
-  const { data } = await api.get<Category[]>(
-    `/workspace/${workspace_id}/categories`
-  );
+export const getCategories = async (workspace_id: number): Promise<Category[]> => {
+  const { data } = await api.get<Category[]>(`/workspace/${workspace_id}/categories`);
   return data;
 };
 
-export const addCategory = async (
-  workspace_id: number,
-  category: string
-): Promise<void> => {
+export const addCategory = async (workspace_id: number, category: string): Promise<void> => {
   await api.post(`/workspace/${workspace_id}/categories`, { name: category });
 };
 
-export const editCategory = async (
-  workspace_id: number,
-  category_id: number,
-  name: string
-): Promise<Category> => {
-  const { data } = await api.put<Category>(
-    `/workspace/${workspace_id}/categories/${category_id}`,
-    {
-      name,
-    }
-  );
+export const editCategory = async (workspace_id: number, category_id: number, name: string): Promise<Category> => {
+  const { data } = await api.put<Category>(`/workspace/${workspace_id}/categories/${category_id}`, {
+    name,
+  });
 
   return data;
 };
 
-export const deleteCategory = async (
-  workspace_id: number,
-  category_id: number
-): Promise<void> => {
+export const deleteCategory = async (workspace_id: number, category_id: number): Promise<void> => {
   await api.delete(`/workspace/${workspace_id}/categories/${category_id}`);
 };

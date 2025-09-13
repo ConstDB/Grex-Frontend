@@ -86,7 +86,7 @@ export function AppSidebar() {
       <SidebarContent>
         <SidebarGroup>
           <SidebarGroupLabel className="text-sm">Main Menu</SidebarGroupLabel>
-          <SidebarGroupContent className="border-b border-b-dark-muted pb-3">
+          <SidebarGroupContent className="border-b border-b-dark-muted pb-4">
             <SidebarMenu>
               {SIDEBAR_ITEMS.map((item) => (
                 <SidebarMenuItem key={item.title}>

@@ -2,12 +2,7 @@ import PageLoader from "@/components/PageLoader";
 import { Progress } from "@/components/ui/progress";
 import UserAvatars from "@/components/UserAvatars";
 import type { Task } from "@/types/task";
-import {
-  capitalizeWord,
-  formatDate,
-  getPrioLevelStyle,
-  getProgressPercentage,
-} from "@/utils";
+import { capitalizeWord, formatDate, getPrioLevelStyle, getProgressPercentage } from "@/utils";
 import type { DraggableProvidedDragHandleProps } from "@hello-pangea/dnd";
 import { BiCommentDetail } from "react-icons/bi";
 import { CiCalendar } from "react-icons/ci";
@@ -27,11 +22,7 @@ type Props = {
   dragHandleProps: DraggableProvidedDragHandleProps | null;
 };
 
-export default function KanbanTask({
-  task,
-  isDragging,
-  dragHandleProps,
-}: Props) {
+export default function KanbanTask({ task, isDragging, dragHandleProps }: Props) {
   const { workspace_id } = useParams();
 
   const { data: subtasks, isPending } = useFetchSubtasksQuery(task.task_id);
@@ -60,11 +51,7 @@ export default function KanbanTask({
       } transition-all duration-200`}
     >
       <div className="flex justify-between">
-        <div
-          className={`p-1 rounded-sm text-xs  ${getPrioLevelStyle(
-            task.priority_level
-          )}`}
-        >
+        <div className={`p-1 rounded-sm text-xs  ${getPrioLevelStyle(task.priority_level)}`}>
           {capitalizeWord(task.priority_level)}
         </div>
 
@@ -75,9 +62,7 @@ export default function KanbanTask({
 
       <div>
         <TaskSheet task={task}>
-          <h3 className="text-dark-text font-semibold hover:underline">
-            {task.title}
-          </h3>
+          <h3 className="text-dark-text font-semibold hover:underline">{task.title}</h3>
         </TaskSheet>
 
         <p className="text-dark-subtle text-sm">{task.subject}</p>

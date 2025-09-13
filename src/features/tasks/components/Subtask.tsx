@@ -12,27 +12,19 @@ type Props = {
 };
 
 export default function SubtaskItem({ task_id, subtask }: Props) {
-  const { mutate: toggleSubtask, error: editSubtaskError } =
-    usePatchSubtaskMutation(task_id, subtask.subtask_id);
-  const { mutate: deleteSubtask, error: deleteSubtaskError } =
-    useDeleteSubtaskMutation(task_id);
+  const { mutate: toggleSubtask, error: editSubtaskError } = usePatchSubtaskMutation(task_id);
+  const { mutate: deleteSubtask, error: deleteSubtaskError } = useDeleteSubtaskMutation(task_id);
 
-  if (editSubtaskError || deleteSubtaskError)
-    toast((editSubtaskError ?? deleteSubtaskError)?.message);
+  if (editSubtaskError || deleteSubtaskError) toast((editSubtaskError ?? deleteSubtaskError)?.message);
 
   return (
     <li key={subtask.subtask_id} className="group flex items-center gap-2 px-4">
       <Checkbox
         className="rounded-sm"
         checked={subtask.is_done}
-        onCheckedChange={() => toggleSubtask({ is_done: !subtask.is_done })}
+        onCheckedChange={() => toggleSubtask({ is_done: !subtask.is_done, subtask_id: subtask.subtask_id })}
       />
-      <p
-        className={cn(
-          "text-sm line-clamp-1",
-          subtask.is_done && "line-through text-muted-foreground"
-        )}
-      >
+      <p className={cn("text-sm line-clamp-1", subtask.is_done && "line-through text-muted-foreground")}>
         {subtask.description}
       </p>
       <button onClick={() => deleteSubtask(subtask.subtask_id)}>

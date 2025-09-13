@@ -1,7 +1,7 @@
 import type { CalendarEvent } from "@schedule-x/calendar";
 
 function CustomMonthEvent({ calendarEvent }: { calendarEvent: CalendarEvent }) {
-  const { title, start, end, description } = calendarEvent;
+  const { title, start, end } = calendarEvent;
   const isMultiDay = start.split(" ")[0] !== end.split(" ")[0]; // Check if event spans multiple days
 
   return (
@@ -18,12 +18,6 @@ function CustomMonthEvent({ calendarEvent }: { calendarEvent: CalendarEvent }) {
       }}
     >
       <span>{title}</span>
-      {isMultiDay && (
-        <span style={{ fontSize: "10px" }}>
-          {start.split(" ")[0]} - {end.split(" ")[0]}
-        </span>
-      )}
-      
     </div>
   );
 }

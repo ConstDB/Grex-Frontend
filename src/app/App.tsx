@@ -16,9 +16,7 @@ const MyTasks = lazy(() => import("./pages/MyTasks"));
 const MyProjects = lazy(() => import("./pages/MyProjects"));
 const MyCalendar = lazy(() => import("./pages/MyCalendar"));
 
-const withSuspense = (node: React.ReactElement) => (
-  <Suspense fallback={<PageLoader />}>{node}</Suspense>
-);
+const withSuspense = (node: React.ReactElement) => <Suspense fallback={<PageLoader />}>{node}</Suspense>;
 
 export default function App() {
   const router = createBrowserRouter([
@@ -42,10 +40,7 @@ export default function App() {
           path: "my-projects",
           children: [
             { index: true, element: withSuspense(<MyProjects />) },
-            {
-              path: ":workspace_id/:workspace_name",
-              element: withSuspense(<WorkspaceContainer />),
-            },
+            { path: ":workspace_id/:workspace_name", element: withSuspense(<WorkspaceContainer />) },
           ],
         },
       ],
