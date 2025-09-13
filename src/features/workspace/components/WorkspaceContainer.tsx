@@ -11,16 +11,12 @@ import { TbLayoutKanbanFilled } from "react-icons/tb";
 import { useParams } from "react-router";
 import { useFetchWorkspaceQuery } from "../hooks/queries/useFetchWorkspaceQuery";
 import CalendarContainer from "./CalendarContainer";
-import WorkspaceHeader from "./WorkspaceHeader";
+import TaskList from "@/features/tasks/components/list/TaskList";
 
 export default function WorkspaceContainer() {
   const { user } = useAuth();
   const { workspace_id } = useParams();
-  const {
-    data: project,
-    isPending,
-    error,
-  } = useFetchWorkspaceQuery(Number(workspace_id), user?.user_id);
+  const { data: project, isPending, error } = useFetchWorkspaceQuery(Number(workspace_id), user?.user_id);
 
   if (isPending) return <PageLoader />;
   if (error) return <div className="text-error">{error.message}</div>; // temporary
@@ -28,8 +24,6 @@ export default function WorkspaceContainer() {
 
   return (
     <div className="rounded-sm m-4 h-[850px]">
-      {/* <WorkspaceHeader /> */}
-
       <div className="px-7">
         <Tabs className="" defaultValue="Kanban">
           <TabsList className="border border-dark-muted">
@@ -56,6 +50,9 @@ export default function WorkspaceContainer() {
           </TabsList>
           <TabsContent className="h-full" value="Kanban">
             <KanbanContainer />
+          </TabsContent>
+          <TabsContent className="h-full" value="List">
+            <TaskList />
           </TabsContent>
           <TabsContent className="h-full" value="Calendar">
             <CalendarContainer />
