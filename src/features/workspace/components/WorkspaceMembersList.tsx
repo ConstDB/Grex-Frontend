@@ -1,14 +1,23 @@
 import { Button } from "@/components/ui/button";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { MoreVertical } from "lucide-react";
 import UserAvatar from "@/components/UserAvatar";
 import type { WorkspaceMember } from "@/types/member";
-import { useKickMemberMutation } from "../hooks/mutations/useKickMemberMutation";
+import { MoreVertical } from "lucide-react";
 import { useParams } from "react-router";
+import { useKickMemberMutation } from "../hooks/mutations/useKickMemberMutation";
+import { usePromoteToLeaderMutation } from "../hooks/mutations/usePromoteToLeaderMutation";
+import { toast } from "sonner";
 
 export default function WorkspaceMembersList({ members }: { members: WorkspaceMember[] }) {
   const { workspace_id } = useParams();
-  const { mutate: kickMember } = useKickMemberMutation(Number(workspace_id));
+  const workspaceId = Number(workspace_id);
+  const { mutate: kickMember } = useKickMemberMutation(workspaceId);
+  const { mutate: promoteToLeader } = usePromoteToLeaderMutation(workspaceId);
+
+  const handlePromoteToLeader = (member: WorkspaceMember) => {
+    promoteToLeader(member.user_id);
+    toast.success(`${member.first_name} ${member.last_name} is now a leader`);
+  };
 
   return (
     <ul className="space-y-2">
@@ -35,9 +44,12 @@ export default function WorkspaceMembersList({ members }: { members: WorkspaceMe
             <DropdownMenuContent>
               <DropdownMenuItem>Change Nickname</DropdownMenuItem>
               {member.role !== "leader" && (
-                <DropdownMenuItem className="text-red-600" onClick={() => kickMember(member.user_id)}>
-                  Kick Member
-                </DropdownMenuItem>
+                <>
+                  <DropdownMenuItem onClick={() => handlePromoteToLeader(member)}>Make leader</DropdownMenuItem>
+                  <DropdownMenuItem className="text-red-600" onClick={() => kickMember(member.user_id)}>
+                    Kick Member
+                  </DropdownMenuItem>
+                </>
               )}
             </DropdownMenuContent>
           </DropdownMenu>

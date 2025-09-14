@@ -39,3 +39,7 @@ export const editWorkspace = async (workspace_id: number, payload: EditProject):
 export const kickMember = async (workspace_id: number, user_id: number): Promise<void> => {
   await api.delete(`/workspace/${workspace_id}/members?user_id=${user_id}`);
 };
+
+export const makeMemberLeader = async (workspace_id: number, user_id: number): Promise<void> => {
+  await api.patch(`/workspace/${workspace_id}/members/${user_id}`, { role: "leader" });
+};
