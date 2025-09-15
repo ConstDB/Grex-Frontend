@@ -1,12 +1,12 @@
 import { useState, useRef } from "react";
-import { Plus } from "lucide-react";
-import { MdOutlineAttachFile } from "react-icons/md";
+import { ImageIcon, PlusCircle, SendHorizontal, SmileIcon } from "lucide-react";
 import { getRandomUserImage } from "@/utils";
 import UserAvatar from "@/components/UserAvatar";
 import { useAuth } from "@/context/auth-context";
 import { useParams } from "react-router";
 import { useFetchWorkspaceQuery } from "@/features/workspace/hooks/queries/useFetchWorkspaceQuery";
 import { useWebsocket } from "../hooks/useWebsocket";
+import { Textarea } from "@/components/ui/textarea";
 
 export default function ChatInput() {
   const [mentionQuery, setMentionQuery] = useState("");
@@ -15,10 +15,7 @@ export default function ChatInput() {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const { user } = useAuth();
   const { workspace_id } = useParams();
-  const { data: project } = useFetchWorkspaceQuery(
-    Number(workspace_id),
-    user?.user_id
-  );
+  const { data: project } = useFetchWorkspaceQuery(Number(workspace_id), user?.user_id);
 
   const { sendMessage } = useWebsocket({
     workspaceId: Number(workspace_id),
@@ -68,8 +65,7 @@ export default function ChatInput() {
     const value = textareaRef.current.value;
     const atIndex = value.lastIndexOf("@", cursorPos - 1);
 
-    const newValue =
-      value.slice(0, atIndex) + `@${name} ` + value.slice(cursorPos);
+    const newValue = value.slice(0, atIndex) + `@${name} ` + value.slice(cursorPos);
 
     textareaRef.current.value = newValue;
     textareaRef.current.focus();
@@ -78,47 +74,72 @@ export default function ChatInput() {
     setShowSuggestions(false);
   };
 
-  const filteredMembers = members?.filter((m) =>
-    m.name.toLowerCase().includes(mentionQuery.toLowerCase())
-  );
+  const filteredMembers = members?.filter((m) => m.name.toLowerCase().includes(mentionQuery.toLowerCase()));
 
   return (
-    <div className="bg-muted mx-2 mb-2 rounded-md p-2 flex flex-col gap-2 relative">
-      <textarea
-        ref={textareaRef}
-        className="w-full resize-none border-none bg-muted shadow-none focus-visible:ring-0 focus:outline-none rounded-md p-2 min-h-[2.5rem] max-h-32 overflow-y-auto"
-        placeholder="Type a new message"
-        onChange={handleChange}
-        onKeyDown={(e) => {
-          if (e.key === "Enter" && !e.shiftKey) {
-            e.preventDefault();
-            handleSendChat();
-          }
-        }}
-      />
-
-      {showSuggestions && filteredMembers && filteredMembers.length > 0 && (
-        <div className="absolute bottom-28 left-2 bg-dark-muted border border-white/20 rounded-md shadow-md z-10">
-          {filteredMembers.map((member) => (
-            <div
-              key={member.id}
-              className="px-4 py-2 cursor-pointer hover:bg-muted flex space-x-2 items-center"
-              onClick={() => handleSelectMention(member.name)}
-            >
-              <UserAvatar name={member.name} photoUrl={getRandomUserImage()} />
-              <span>{member.name}</span>
-            </div>
-          ))}
+    <div className="">
+      <div className="bg-muted rounded-xl flex items-end gap-2 p-2">
+        {/* Quick Actions */}
+        <div className="flex items-center gap-2 px-2">
+          <button className="p-2 hover:bg-dark-muted rounded-full transition-colors">
+            <PlusCircle className="size-5 text-muted-foreground" />
+          </button>
+          <button className="p-2 hover:bg-dark-muted rounded-full transition-colors">
+            <ImageIcon className="size-5 text-muted-foreground" />
+          </button>
         </div>
-      )}
 
-      <div className="flex items-center gap-2">
-        <button className="size-8 bg-dark-muted border border-white/20 rounded-sm flex justify-center items-center">
-          <Plus className="size-4" />
-        </button>
-        <button>
-          <MdOutlineAttachFile className="size-5 font-thin text-white/60" />
-        </button>
+        {/* Text Input */}
+        <div className="flex-1 relative">
+          <Textarea
+            ref={textareaRef}
+            className="w-full resize-none border-none bg-transparent text-sm shadow-none 
+              focus-visible:ring-0 focus:outline-none rounded-md py-2 min-h-[20px] max-h-32 
+              overflow-y-auto placeholder:text-muted-foreground/50"
+            placeholder="Write a message..."
+            rows={1}
+            onChange={handleChange}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" && !e.shiftKey) {
+                e.preventDefault();
+                handleSendChat();
+              }
+            }}
+          />
+
+          {/* Mentions Suggestions */}
+          {showSuggestions && filteredMembers && filteredMembers.length > 0 && (
+            <div
+              className="absolute bottom-full mb-2 left-0 bg-dark-surface border 
+              border-dark-muted rounded-lg shadow-lg overflow-hidden w-64"
+            >
+              {filteredMembers.map((member) => (
+                <div
+                  key={member.id}
+                  className="px-3 py-2 cursor-pointer hover:bg-muted/50 transition-colors 
+                    flex items-center gap-2"
+                  onClick={() => handleSelectMention(member.name)}
+                >
+                  <UserAvatar name={member.name} photoUrl={getRandomUserImage()} className="size-6" />
+                  <span className="text-sm">{member.name}</span>
+                </div>
+              ))}
+            </div>
+          )}
+        </div>
+
+        {/* Right Actions */}
+        <div className="flex items-center gap-2 px-2">
+          <button className="p-2 hover:bg-dark-muted rounded-full transition-colors">
+            <SmileIcon className="size-5 text-muted-foreground" />
+          </button>
+          <button
+            onClick={handleSendChat}
+            className="p-2 hover:bg-brand-primary/80 bg-brand-primary rounded-full transition-colors"
+          >
+            <SendHorizontal className="size-5 text-white" />
+          </button>
+        </div>
       </div>
     </div>
   );
