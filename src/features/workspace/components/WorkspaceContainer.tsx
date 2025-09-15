@@ -23,7 +23,7 @@ export default function WorkspaceContainer() {
   if (!project) return; // TODO: Better fallback
 
   return (
-    <div className="rounded-sm m-4 h-[850px]">
+    <div className="rounded-sm m-4 min-h-[850px] flex flex-col">
       <div className="px-7">
         <Tabs className="" defaultValue="Kanban">
           <TabsList className="border border-dark-muted">
@@ -57,7 +57,7 @@ export default function WorkspaceContainer() {
           <TabsContent className="h-full" value="Calendar">
             <CalendarContainer />
           </TabsContent>
-          <TabsContent className="h-full" value="Messages">
+          <TabsContent value="Messages" className="flex-1 h-full">
             <ChatContainer />
           </TabsContent>
         </Tabs>

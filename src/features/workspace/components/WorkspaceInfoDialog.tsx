@@ -41,8 +41,12 @@ const mockActivities = [
 ];
 
 const mockLinks = [
-  { id: 1, label: "Google Docs", url: "https://docs.google.com" },
-  { id: 2, label: "GitHub Repo", url: "https://github.com/ConstDB/Grex-Frontend" },
+  {
+    id: 1,
+    label: "Google Docs",
+    url: "https://docs.google.com/document/d/1WR_CVYh1Ph8IdwzjrmjVNYagfen_kqrbeftqhuw0cuw/edit?tab=t.0",
+  },
+  { id: 2, label: "GitHub Repo", url: "https://github.com/ConstDB" },
 ];
 
 type Props = {
