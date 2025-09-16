@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/sidebar";
 import { SIDEBAR_ITEMS } from "@/constants";
 import { useAuth } from "@/context/auth-context";
-import { useUserWorkspaces } from "@/features/workspace/hooks/queries/useUserWorkspaces";
+import { useFetchAllWorkspacesQuery } from "@/features/workspace/hooks/queries/useFetchAllWorkspacesQuery";
 import { GoPlus } from "react-icons/go";
 import {
   IoIosHelpCircleOutline,
@@ -31,7 +31,7 @@ export function AppSidebar() {
   const { workspace_name: activeProject } = useParams();
   const { user } = useAuth();
 
-  const { data: projects } = useUserWorkspaces(user?.user_id);
+  const { data: projects } = useFetchAllWorkspacesQuery(user?.user_id);
 
   if (!user) return <Navigate to="/auth/signin" />;
 
