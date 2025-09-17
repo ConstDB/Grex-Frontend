@@ -5,4 +5,5 @@ export interface Notification {
   content: string;
   is_read: boolean;
   delivered_at: string;
+  workspace_name: string;
 }
