@@ -37,38 +37,28 @@ export interface Achievement {
 }
 
 export interface EditUser {
-  username?: string | null;
   email?: string;
   phone_number?: string;
   first_name?: string;
   last_name?: string;
   profile_picture?: string | null;
-  role?: string | null; // e.g., "Fullstack Developer", "Project Manager"
+  role?: string | null;
   bio?: string | null;
-  skills?: string[]; // empty array if no skills yet
-  social_links?: SocialLinks; // can be null/undefined
+  skills?: string[];
+  social_links?: SocialLinks;
 }
 
 export interface User {
   user_id: number;
-  username: string | null;
   email: string;
   phone_number: string;
   first_name: string;
   last_name: string;
   profile_picture: string | null;
-  role: string | null; // e.g., "Fullstack Developer", "Project Manager"
+  role: string | null;
   bio: string | null;
-  skills: string[]; // empty array if no skills yet
-  social_links: SocialLinks; // can be null/undefined
-  // social_link: { // SHAPE
-  //   github?: string;
-  //   linkedin?: string;
-  //   portfolio?: string;
-  //   twitter?: string;
-  //   discord?: string;
-  //   email?: string; // iba talaga to. ex: mailto:yourname@example.com
-  // }
+  skills: string[];
+  social_links: SocialLinks;
 }
 
 type BaseSocialLink = {
