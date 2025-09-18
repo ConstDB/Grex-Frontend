@@ -18,11 +18,7 @@ type Props = {
 export default function EditTask({ task, onCancel }: Props) {
   const { workspace_id } = useParams();
 
-  const {
-    mutate: editTask,
-    isPending,
-    error,
-  } = usePatchTaskMutation(Number(workspace_id));
+  const { mutate: editTask, isPending, error } = usePatchTaskMutation(Number(workspace_id));
   const {
     register,
     handleSubmit,
@@ -49,23 +45,11 @@ export default function EditTask({ task, onCancel }: Props) {
 
   return (
     <form onSubmit={handleSubmit(onSubmit)} className="px-4">
-      <div className="flex flex-col space-y-4 mt-4 mb-8">
-        <RHFFormField
-          id="title"
-          label="Task name"
-          error={errors.title?.message}
-        >
-          <Input
-            id="title"
-            placeholder="Task name"
-            {...register("title", { required: "Task name is required" })}
-          />
+      <div className="flex flex-col space-y-4 mb-8">
+        <RHFFormField id="title" label="Task name" error={errors.title?.message}>
+          <Input id="title" placeholder="Task name" {...register("title", { required: "Task name is required" })} />
         </RHFFormField>
-        <RHFFormField
-          id="subject"
-          label="Subject"
-          error={errors.subject?.message}
-        >
+        <RHFFormField id="subject" label="Subject" error={errors.subject?.message}>
           <Input
             id="subject"
             placeholder="Subject of the task" // improve this
@@ -74,11 +58,7 @@ export default function EditTask({ task, onCancel }: Props) {
             })}
           />
         </RHFFormField>
-        <RHFFormField
-          id="description"
-          label="Description"
-          error={errors.description?.message}
-        >
+        <RHFFormField id="description" label="Description" error={errors.description?.message}>
           <Textarea
             id="description"
             placeholder="Description"
@@ -95,14 +75,8 @@ export default function EditTask({ task, onCancel }: Props) {
             rules={{ required: "Start date is required" }}
             render={({ field }) => (
               <div className="flex-1">
-                <DatePicker
-                  label="Start date"
-                  value={field.value}
-                  onChange={(date) => field.onChange(date)}
-                />
-                <p className="text-error text-xs">
-                  {errors.start_date?.message}
-                </p>
+                <DatePicker label="Start date" value={field.value} onChange={(date) => field.onChange(date)} />
+                <p className="text-error text-xs">{errors.start_date?.message}</p>
               </div>
             )}
           />
@@ -112,11 +86,7 @@ export default function EditTask({ task, onCancel }: Props) {
             rules={{ required: "Deadline is required" }}
             render={({ field }) => (
               <div className="flex-1">
-                <DatePicker
-                  label="Deadline"
-                  value={field.value}
-                  onChange={(date) => field.onChange(date)}
-                />
+                <DatePicker label="Deadline" value={field.value} onChange={(date) => field.onChange(date)} />
                 <p className="text-error text-xs">{errors.deadline?.message}</p>
               </div>
             )}
@@ -135,9 +105,7 @@ export default function EditTask({ task, onCancel }: Props) {
                 placeholder={field.value}
                 onChange={(val) => field.onChange(val)}
               />
-              <p className="text-error text-xs">
-                {errors.priority_level?.message}
-              </p>
+              <p className="text-error text-xs">{errors.priority_level?.message}</p>
             </div>
           )}
         />

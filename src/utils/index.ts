@@ -179,7 +179,7 @@ export function isMessageHistoryItem(msg: ChatMessage): msg is MessageHistoryIte
   return "message_type" in msg;
 }
 
-export function formatChatDate(dateString: string): string {
+export function formatChatDate(dateString: string | Date): string {
   const date = new Date(dateString);
   const now = new Date();
 

@@ -13,9 +13,9 @@ export default function AssigneeItem({ assignee, id }: { assignee: TaskAssignee;
   };
 
   return (
-    <div className="text-sm flex space-x-3 items-center p-1 rounded-md bg-dark-muted">
+    <div className="text-sm flex space-x-1 items-center px-1 rounded-xl bg-dark-muted">
       <UserAvatar photoUrl={assignee.avatar} name={assignee.name} />
-      <span className="text-dark-text font-medium">{assignee.name}</span>
+      <span className="text-dark-text font-medium whitespace-nowrap min-w-20">{assignee.name}</span>
       <button onClick={handleRemoveAssignee} className="hover:bg-dark-subtle p-1 rounded group">
         <XIcon className="size-4 text-dark-text group-hover:text-dark-muted" />
       </button>

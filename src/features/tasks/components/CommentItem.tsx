@@ -1,7 +1,7 @@
+import UserAvatar from "@/components/UserAvatar";
 import type { Comment } from "@/types/comment";
-import { getInitials } from "@/utils";
-import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
-import { formatDate } from "@/utils";
+import { formatChatDate } from "@/utils";
+import { Avatar } from "@radix-ui/react-avatar";
 import { BsDot } from "react-icons/bs";
 
 type Props = {
@@ -12,23 +12,14 @@ export default function CommentItem({ comment }: Props) {
   return (
     <div className="flex space-x-3 mx-4 my-2">
       <Avatar>
-        <AvatarImage
-          src={comment.profile_picture}
-          alt="user profile"
-          className="size-10 rounded-full"
-        />
-        <AvatarFallback>{getInitials(comment.sender_name)}</AvatarFallback>
+        <UserAvatar name={comment.sender_name} photoUrl={comment.profile_picture} />
       </Avatar>
 
       <div className="">
         <div className="flex items-center">
-          <h3 className="text-dark-subtle text-sm font-medium">
-            {comment.sender_name}
-          </h3>
+          <h3 className="text-dark-subtle text-sm font-medium">{comment.sender_name}</h3>
           <BsDot className="text-dark-subtle" />
-          <h4 className="text-dark-subtle text-sm">
-            {formatDate(comment.created_at)}
-          </h4>
+          <h4 className="text-dark-subtle text-sm">{formatChatDate(comment.created_at)}</h4>
         </div>
         <p className="text-dark-text">{comment.content}</p>
       </div>
