@@ -51,7 +51,7 @@ export interface EditUser {
 export interface User {
   user_id: number;
   email: string;
-  phone_number: string;
+  phone_number?: string;
   first_name: string;
   last_name: string;
   profile_picture: string | null;

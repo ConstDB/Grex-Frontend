@@ -1,8 +1,7 @@
-import { useState, useLayoutEffect, type PropsWithChildren } from "react";
-import { AuthContext } from "./auth-context";
 import api from "@/lib/axios";
 import type { IUserCredentials } from "@/types";
-import { Navigate } from "react-router";
+import { useLayoutEffect, useState, type PropsWithChildren } from "react";
+import { AuthContext } from "./auth-context";
 
 export interface IUser {
   email: string;
@@ -15,9 +14,7 @@ export interface IUser {
 }
 
 export const AuthProvider = ({ children }: PropsWithChildren) => {
-  const [token, setToken] = useState<string | null>(() =>
-    localStorage.getItem("access_token")
-  );
+  const [token, setToken] = useState<string | null>(() => localStorage.getItem("access_token"));
   const [user, setUser] = useState<IUser | null>(() => {
     const storedUser = localStorage.getItem("user");
     return storedUser ? JSON.parse(storedUser) : null;
@@ -25,10 +22,7 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
 
   useLayoutEffect(() => {
     const authInterceptor = api.interceptors.request.use((config) => {
-      config.headers.Authorization =
-        !config._retry && token
-          ? `Bearer ${token}`
-          : config.headers.Authorization;
+      config.headers.Authorization = !config._retry && token ? `Bearer ${token}` : config.headers.Authorization;
       return config;
     });
 
@@ -76,28 +70,17 @@ export const AuthProvider = ({ children }: PropsWithChildren) => {
       localStorage.setItem("user", JSON.stringify(response.data.user));
       localStorage.setItem("access_token", response.data.access_token);
     } catch (error) {
-      throw new Error(
-        `Login failed, please check your credentials. \nError: ${
-          (error as Error).message
-        }`
-      );
+      throw new Error(`Login failed, please check your credentials. \nError: ${(error as Error).message}`);
     }
   };
 
   const logout = () => {
+    window.location.href = "/auth/signin";
     setToken(null);
     setUser(null);
     localStorage.removeItem("access_token");
     localStorage.removeItem("user");
-
-    <Navigate to="/auth/signin" />;
   };
 
-  return (
-    <AuthContext.Provider
-      value={{ token, setToken, user, setUser, login, logout }}
-    >
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={{ token, setToken, user, setUser, login, logout }}>{children}</AuthContext.Provider>;
 };

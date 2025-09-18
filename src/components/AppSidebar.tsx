@@ -15,14 +15,12 @@ import { SIDEBAR_ITEMS } from "@/constants";
 import { useAuth } from "@/context/auth-context";
 import { useFetchAllWorkspacesQuery } from "@/features/workspace/hooks/queries/useFetchAllWorkspacesQuery";
 import { GoPlus } from "react-icons/go";
-import {
-  IoIosHelpCircleOutline,
-  IoIosInformationCircleOutline,
-} from "react-icons/io";
+import { IoIosHelpCircleOutline, IoIosInformationCircleOutline } from "react-icons/io";
 import { Navigate, useLocation, useNavigate, useParams } from "react-router";
 import slugify from "slugify";
 import UserAvatar from "./UserAvatar";
 import { NewProjectModal } from "@/features/workspace/components/NewProjectModal";
+import { UserDropdown } from "./UserDropdown";
 
 export function AppSidebar() {
   const location = useLocation();
@@ -39,48 +37,32 @@ export function AppSidebar() {
     navigate(`/${slugify(item, { lower: true })}`);
   };
 
-  const handleSelectActiveProject = (
-    projectId: number,
-    projectName: string
-  ) => {
-    navigate(
-      `/my-projects/${projectId}/${slugify(projectName, { lower: true })}`
-    );
+  const handleSelectActiveProject = (projectId: number, projectName: string) => {
+    navigate(`/my-projects/${projectId}/${slugify(projectName, { lower: true })}`);
   };
 
   const getActiveClass = (tab: string) => {
-    return activeTab === slugify(tab, { lower: true })
-      ? "text-brand-primary"
-      : "text-white";
+    return activeTab === slugify(tab, { lower: true }) ? "text-brand-primary" : "text-white";
   };
 
   const getActiveProjectClass = (projectName: string) => {
-    return activeProject === slugify(projectName, { lower: true })
-      ? "text-brand-primary"
-      : "text-white";
+    return activeProject === slugify(projectName, { lower: true }) ? "text-brand-primary" : "text-white";
   };
 
   return (
-    <Sidebar
-      variant="sidebar"
-      className="border-r border-r-dark-muted font-inter"
-    >
+    <Sidebar variant="sidebar" className="border-r border-r-dark-muted font-inter">
       <SidebarHeader className="border-b border-b-dark-muted">
-        <div className="w-full flex space-x-3 rounded">
-          <img
-            src={profile}
-            className="size-10 rounded"
-            alt="profile picture"
-          />
-          <div>
-            <h3 className="font-medium text-sm text-dark-text">
-              {user?.first_name ?? "Jonel"} {user?.last_name ?? "Villaver"}
-            </h3>
-            <h4 className="text-sm text-dark-subtle text-ellipsis">
-              {user?.email ?? "jonelvillaver@gmail.com"}
-            </h4>
+        <UserDropdown>
+          <div className="w-full flex space-x-3 rounded">
+            <img src={profile} className="size-10 rounded" alt="profile picture" />
+            <div>
+              <h3 className="font-medium text-sm text-dark-text">
+                {user?.first_name ?? "Jonel"} {user?.last_name ?? "Villaver"}
+              </h3>
+              <h4 className="text-sm text-dark-subtle text-ellipsis">{user?.email ?? "jonelvillaver@gmail.com"}</h4>
+            </div>
           </div>
-        </div>
+        </UserDropdown>
       </SidebarHeader>
 
       <SidebarContent>
@@ -90,13 +72,9 @@ export function AppSidebar() {
             <SidebarMenu>
               {SIDEBAR_ITEMS.map((item) => (
                 <SidebarMenuItem key={item.title}>
-                  <SidebarMenuButton
-                    onClick={() => handleSelectTab(item.title)}
-                  >
+                  <SidebarMenuButton onClick={() => handleSelectTab(item.title)}>
                     <item.icon className={getActiveClass(item.title)} />
-                    <span className={getActiveClass(item.title)}>
-                      {item.title}
-                    </span>
+                    <span className={getActiveClass(item.title)}>{item.title}</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
@@ -114,22 +92,9 @@ export function AppSidebar() {
             <SidebarMenu>
               {projects?.map((project) => (
                 <SidebarMenuItem key={project.workspace_id}>
-                  <SidebarMenuButton
-                    onClick={() =>
-                      handleSelectActiveProject(
-                        project.workspace_id,
-                        project.name
-                      )
-                    }
-                  >
-                    <UserAvatar
-                      name={project.name}
-                      photoUrl={project.workspace_profile_url ?? ""}
-                      className="size-6"
-                    />
-                    <span className={getActiveProjectClass(project.name)}>
-                      {project.name}
-                    </span>
+                  <SidebarMenuButton onClick={() => handleSelectActiveProject(project.workspace_id, project.name)}>
+                    <UserAvatar name={project.name} photoUrl={project.workspace_profile_url ?? ""} className="size-6" />
+                    <span className={getActiveProjectClass(project.name)}>{project.name}</span>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
               ))}
