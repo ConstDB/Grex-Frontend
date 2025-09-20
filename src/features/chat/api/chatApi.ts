@@ -26,3 +26,7 @@ export const getPinnedMessages = async (workspace_id: number): Promise<PinnedMes
 
   return data;
 };
+
+export const unpinMessage = async (workspace_id: number, message_id: number): Promise<void> => {
+  await api.delete(`/workspace/${workspace_id}/pinned-messages/${message_id}`);
+};
