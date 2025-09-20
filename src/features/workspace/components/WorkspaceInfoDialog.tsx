@@ -1,11 +1,11 @@
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import { useAuth } from "@/context/auth-context";
 import { useState } from "react";
 import { useParams } from "react-router";
 import { useFetchWorkspaceQuery } from "../hooks/queries/useFetchWorkspaceQuery";
 import WorkspaceInfoLeft from "./WorkspaceInfoLeft";
 import WorkspaceInfoTabs from "./WorkspaceInfoTabs";
 import { parseLocalDate } from "@/utils";
+import { useFetchWorkspaceMembersQuery } from "../hooks/queries/useFetchWorkspaceMembersQuery";
 
 const mockActivities = [
   {
@@ -55,10 +55,9 @@ type Props = {
 };
 
 export default function WorkspaceInfoDialog({ open, onOpenChange }: Props) {
-  const { user } = useAuth();
   const { workspace_id } = useParams();
-  const { data: workspace } = useFetchWorkspaceQuery(Number(workspace_id), user?.user_id);
-  const members = workspace?.members || [];
+  const { data: workspace } = useFetchWorkspaceQuery(Number(workspace_id));
+  const { data: members = [] } = useFetchWorkspaceMembersQuery(Number(workspace_id));
 
   const [links, setLinks] = useState(mockLinks);
   const [newLink, setNewLink] = useState({ label: "", url: "" });

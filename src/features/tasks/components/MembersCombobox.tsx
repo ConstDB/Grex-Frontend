@@ -1,10 +1,7 @@
-"use client";
-
 import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem, CommandList } from "@/components/ui/command";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 import UserAvatar from "@/components/UserAvatar";
-import { useAuth } from "@/context/auth-context";
-import { useFetchWorkspaceQuery } from "@/features/workspace/hooks/queries/useFetchWorkspaceQuery";
+import { useFetchWorkspaceMembersQuery } from "@/features/workspace/hooks/queries/useFetchWorkspaceMembersQuery";
 import { type PropsWithChildren } from "react";
 import { useParams } from "react-router";
 import { useAssignTaskMemberMutation } from "../hooks/mutations/useAssignTaskMemberMutation";
@@ -17,13 +14,11 @@ type Props = PropsWithChildren & {
 };
 
 export default function MembersCombobox({ id, open, setOpen, children }: Props) {
-  const { user } = useAuth();
   const { workspace_id } = useParams();
   const { data: assignees } = useFetchTaskAssigneesQuery(id);
   const { mutate: addAssignee } = useAssignTaskMemberMutation(id);
-  const { data: project } = useFetchWorkspaceQuery(Number(workspace_id), user?.user_id);
+  const { data: members } = useFetchWorkspaceMembersQuery(Number(workspace_id));
 
-  const members = project?.members;
   const availableMembers = members?.filter((member) => !assignees?.some((a) => a.user_id === member.user_id));
 
   return (

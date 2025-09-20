@@ -1,5 +1,3 @@
-import type { WorkspaceMember } from "./member";
-
 export interface NewProject {
   name: string;
   description: string;
@@ -59,5 +57,4 @@ export interface WorkspaceResponse {
   workspace_profile_url: string | null;
   created_by: number;
   created_at: Date;
-  members: WorkspaceMember[];
 }

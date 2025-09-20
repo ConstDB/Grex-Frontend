@@ -6,10 +6,12 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 import { FileIcon, ImageIcon, UsersIcon } from "lucide-react";
 import { useFetchWorkspaceQuery } from "@/features/workspace/hooks/queries/useFetchWorkspaceQuery";
 import { useParams } from "react-router";
-import { useAuth } from "@/context/auth-context";
 import { formatDateToLong } from "@/utils";
 import { useChatReplyStore } from "@/stores/useChatReplyStore";
 import ReplyPreview from "./ReplyPreview";
+import { useFetchWorkspaceMembersQuery } from "@/features/workspace/hooks/queries/useFetchWorkspaceMembersQuery";
+import { BsPinAngle } from "react-icons/bs";
+import PinnedMessagesDialog from "./PinnedMessagesDialog";
 
 // Mock data
 const mockMembers = [
@@ -85,15 +87,14 @@ const mockLinks = [
 ];
 
 export default function ChatContainer() {
-  const { user } = useAuth();
   const { workspace_id } = useParams();
-  const { data: project } = useFetchWorkspaceQuery(Number(workspace_id), user?.user_id);
-  const members = project?.members || [];
+  const workspaceId = Number(workspace_id);
+  const { data: project } = useFetchWorkspaceQuery(workspaceId);
+  const { data: members = [] } = useFetchWorkspaceMembersQuery(workspaceId);
   const replyingTo = useChatReplyStore((state) => state.replyingTo);
 
   return (
     <div className="shadow flex h-full w-full gap-4 overflow-hidden">
-      {/* Chat area */}
       <div className="bg-dark-surface rounded-xl overflow-hidden flex flex-col flex-1 min-h-0 max-h-[800px]">
         <ChatHeader />
         <div className="flex-1 min-h-0 flex flex-col overflow-hidden">
@@ -105,12 +106,9 @@ export default function ChatContainer() {
         </div>
       </div>
 
-      {/* Sidebar */}
       <div className="w-[500px] flex flex-col rounded-xl border border-dark-muted bg-dark-surface/50 backdrop-blur-sm max-h-[800px]">
         <ScrollArea className="">
-          {/* Static Info Section */}
           <div className="p-4 space-y-6">
-            {/* Workspace Profile */}
             <div className="flex flex-col items-center">
               <div className="w-20 h-20 rounded-full bg-muted/30 flex items-center justify-center mb-2">
                 {project?.workspace_profile_url ? (
@@ -127,20 +125,23 @@ export default function ChatContainer() {
               <p className="text-sm text-muted-foreground text-justify line-clamp-6 mt-1">{project?.description}</p>
             </div>
 
-            {/* Quick Actions */}
             <div className="space-y-2">
               <h4 className="text-sm font-medium mb-2">Quick Actions</h4>
               <button className="w-full flex items-center gap-2 p-2 rounded-md hover:bg-muted/50 transition-colors text-sm">
                 <UsersIcon className="size-4" />
                 Add Members
               </button>
-              <button className="w-full flex items-center gap-2 p-2 rounded-md hover:bg-muted/50 transition-colors text-sm">
-                <FileIcon className="size-4" />
-                Share Files
-              </button>
+              <PinnedMessagesDialog>
+                <div
+                  role="button"
+                  className="w-full flex items-center gap-2 p-2 rounded-md hover:bg-muted/50 transition-colors text-sm"
+                >
+                  <BsPinAngle className="size-4" />
+                  View pinned messages
+                </div>
+              </PinnedMessagesDialog>
             </div>
 
-            {/* Project Details */}
             <div className="space-y-3">
               <h4 className="text-sm font-medium">Project Details</h4>
               <div className="space-y-2">
@@ -164,7 +165,6 @@ export default function ChatContainer() {
             </div>
           </div>
 
-          {/* Tabs Section */}
           <Tabs defaultValue="members" className="border-t border-dark-muted">
             <TabsList className="w-full justify-start rounded-none bg-muted/80 border-b border-dark-muted sticky top-0 z-10">
               <TabsTrigger value="members" className="flex py-4 rounded-none gap-2 data-[state=active]:bg-dark-muted">
@@ -181,7 +181,6 @@ export default function ChatContainer() {
               </TabsTrigger>
             </TabsList>
 
-            {/* Tab Contents */}
             <div className="overflow-y-auto">
               <TabsContent value="members" className="m-0 max-h-40">
                 <div className="p-4 space-y-3">
@@ -190,18 +189,8 @@ export default function ChatContainer() {
                       key={member.user_id}
                       className="flex items-center gap-3 p-2 rounded-md hover:bg-muted/50 transition-colors"
                     >
-                      <div className="relative">
-                        <img src={member.profile_picture ?? undefined} className="size-8 rounded-full border border-dark-muted" />
-                        <div
-                          className={`absolute bottom-0 right-0 w-3 h-3 rounded-full border-2 border-dark-surface ${
-                            member.status === "online" ? "bg-green-500" : "bg-gray-400"
-                          }`}
-                        />
-                      </div>
-                      <div>
-                        <div className="font-medium text-sm">{member.first_name + " " + member.last_name}</div>
-                        <div className="text-xs text-muted-foreground capitalize">{member.status}</div>
-                      </div>
+                      <img src={member.profile_picture ?? undefined} className="size-8 rounded-full border border-dark-muted" />
+                      <div className="font-medium text-sm">{member.first_name + " " + member.last_name}</div>
                     </div>
                   ))}
                 </div>

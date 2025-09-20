@@ -1,13 +1,13 @@
-import { useState, useRef } from "react";
-import { ImageIcon, PlusCircle, SendHorizontal, SmileIcon } from "lucide-react";
-import { getRandomUserImage, isIncomingChatMessage, isMessageHistoryItem } from "@/utils";
+import { Textarea } from "@/components/ui/textarea";
 import UserAvatar from "@/components/UserAvatar";
 import { useAuth } from "@/context/auth-context";
-import { useParams } from "react-router";
-import { useFetchWorkspaceQuery } from "@/features/workspace/hooks/queries/useFetchWorkspaceQuery";
-import { useWebsocket } from "../hooks/useWebsocket";
-import { Textarea } from "@/components/ui/textarea";
+import { useFetchWorkspaceMembersQuery } from "@/features/workspace/hooks/queries/useFetchWorkspaceMembersQuery";
 import { useChatReplyStore } from "@/stores/useChatReplyStore";
+import { getRandomUserImage, isIncomingChatMessage, isMessageHistoryItem } from "@/utils";
+import { ImageIcon, PlusCircle, SendHorizontal, SmileIcon } from "lucide-react";
+import { useRef, useState } from "react";
+import { useParams } from "react-router";
+import { useWebsocket } from "../hooks/useWebsocket";
 
 export default function ChatInput() {
   const [mentionQuery, setMentionQuery] = useState("");
@@ -19,18 +19,12 @@ export default function ChatInput() {
   const textareaRef = useRef<HTMLTextAreaElement | null>(null);
   const { user } = useAuth();
   const { workspace_id } = useParams();
-  const { data: project } = useFetchWorkspaceQuery(Number(workspace_id), user?.user_id);
-
+  const workspaceId = Number(workspace_id);
+  const { data: members = [] } = useFetchWorkspaceMembersQuery(workspaceId);
   const { sendMessage } = useWebsocket({
     workspaceId: Number(workspace_id),
     userId: user?.user_id ?? 0,
   });
-
-  const members = project?.members.map((member) => ({
-    avatar: member.profile_picture,
-    name: member.first_name + " " + member.last_name,
-    id: member.user_id,
-  }));
 
   const handleSendChat = () => {
     if (!textareaRef.current?.value.trim()) return;
@@ -86,7 +80,7 @@ export default function ChatInput() {
     setShowSuggestions(false);
   };
 
-  const filteredMembers = members?.filter((m) => m.name.toLowerCase().includes(mentionQuery.toLowerCase()));
+  const filteredMembers = members?.filter((m) => m.nickname.toLowerCase().includes(mentionQuery.toLowerCase()));
 
   return (
     <div className="">
@@ -127,13 +121,13 @@ export default function ChatInput() {
             >
               {filteredMembers.map((member) => (
                 <div
-                  key={member.id}
+                  key={member.user_id}
                   className="px-3 py-2 cursor-pointer hover:bg-muted/50 transition-colors 
                     flex items-center gap-2"
-                  onClick={() => handleSelectMention(member.name)}
+                  onClick={() => handleSelectMention(member.nickname)}
                 >
-                  <UserAvatar name={member.name} photoUrl={getRandomUserImage()} className="size-6" />
-                  <span className="text-sm">{member.name}</span>
+                  <UserAvatar name={member.nickname} photoUrl={getRandomUserImage()} className="size-6" />
+                  <span className="text-sm">{member.nickname}</span>
                 </div>
               ))}
             </div>

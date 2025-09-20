@@ -1,8 +1,8 @@
 import PageLoader from "@/components/PageLoader";
 import { Tabs, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { useAuth } from "@/context/auth-context";
 import ChatContainer from "@/features/chat/components/ChatContainer";
 import KanbanContainer from "@/features/tasks/components/kanban/KanbanContainer";
+import TaskList from "@/features/tasks/components/list/TaskList";
 import { TabsContent } from "@radix-ui/react-tabs";
 import { CiBoxList, CiCalendar } from "react-icons/ci";
 import { HiOutlineClipboardDocumentList } from "react-icons/hi2";
@@ -11,12 +11,10 @@ import { TbLayoutKanbanFilled } from "react-icons/tb";
 import { useParams } from "react-router";
 import { useFetchWorkspaceQuery } from "../hooks/queries/useFetchWorkspaceQuery";
 import CalendarContainer from "./CalendarContainer";
-import TaskList from "@/features/tasks/components/list/TaskList";
 
 export default function WorkspaceContainer() {
-  const { user } = useAuth();
   const { workspace_id } = useParams();
-  const { data: project, isPending, error } = useFetchWorkspaceQuery(Number(workspace_id), user?.user_id);
+  const { data: project, isPending, error } = useFetchWorkspaceQuery(Number(workspace_id));
 
   if (isPending) return <PageLoader />;
   if (error) return <div className="text-error">{error.message}</div>; // temporary

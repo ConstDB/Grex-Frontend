@@ -1,6 +1,7 @@
-import { useAuth } from "@/context/auth-context";
+import NotificationContainer from "@/features/notification/components/NotificationContainer";
 import InviteWorkspaceMemberModal from "@/features/workspace/components/InviteWorkspaceMemberModal";
 import WorkspaceMenu from "@/features/workspace/components/WorkspaceMenu";
+import { useFetchWorkspaceMembersQuery } from "@/features/workspace/hooks/queries/useFetchWorkspaceMembersQuery";
 import { useFetchWorkspaceQuery } from "@/features/workspace/hooks/queries/useFetchWorkspaceQuery";
 import { formatDate } from "@/utils/index";
 import { Bell, ExternalLink, Plus } from "lucide-react";
@@ -9,17 +10,13 @@ import { useParams } from "react-router";
 import { Button } from "./ui/button";
 import { SidebarTrigger } from "./ui/sidebar";
 import UserAvatars from "./UserAvatars";
-import NotificationContainer from "@/features/notification/components/NotificationContainer";
 
 export default function MainHeader() {
-  const { user } = useAuth();
   const { workspace_id } = useParams();
-  const { data: project } = useFetchWorkspaceQuery(Number(workspace_id), user?.user_id);
-
-  const members = project?.members.map((member) => ({
-    avatar: member.profile_picture,
-    name: member.first_name + " " + member.last_name,
-  }));
+  const workspaceId = Number(workspace_id);
+  const { data: project } = useFetchWorkspaceQuery(workspaceId);
+  const { data: members = [] } = useFetchWorkspaceMembersQuery(workspaceId);
+  const membersData = members.map((member) => ({ name: member.nickname, avatar: member.profile_picture }));
 
   if (!project) return;
 
@@ -46,7 +43,7 @@ export default function MainHeader() {
         </div>
 
         <div className="flex space-x-4 items-center">
-          <UserAvatars users={members ?? []} />
+          <UserAvatars users={membersData ?? []} />
           <InviteWorkspaceMemberModal>
             <div className="size-[32px] rounded-full bg-dark-surface border flex items-center justify-center hover:bg-dark-muted transition-colors">
               <Plus className="size-4" />
