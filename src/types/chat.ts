@@ -14,16 +14,15 @@ export interface IncomingChatMessage extends OutgoingChatMessage {
 }
 
 // change message_id to temp_id
-export interface PendingChatMessage
-  extends Omit<IncomingChatMessage, "message_id"> {
+export interface PendingChatMessage extends Omit<IncomingChatMessage, "message_id"> {
   temp_id: string;
 }
 
 // All these fields are temporarily set to null because we are focusing on text messages first, but these are
 // part of the response shape that's why these are here
-export interface MessageHistoryItem
-  extends Omit<IncomingChatMessage, "avatar" | "type"> {
+export interface MessageHistoryItem extends Omit<IncomingChatMessage, "avatar" | "type"> {
   // removing avatar and type here temporarily because of naming mismatch
+  is_pinned: boolean;
   profile_picture: string | null;
   message_type: string;
   file_url?: string | null;
@@ -31,7 +30,5 @@ export interface MessageHistoryItem
   question?: string | null;
 }
 
-export type ChatMessage =
-  | IncomingChatMessage
-  | MessageHistoryItem
-  | PendingChatMessage;
+export type ChatMessage = IncomingChatMessage | MessageHistoryItem | PendingChatMessage;
+export type PinnedMessage = MessageHistoryItem;
