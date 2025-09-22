@@ -2,10 +2,22 @@ import { Plus } from "lucide-react";
 import TaskRow from "./TaskRow";
 import { useFetchTasksQuery } from "../../hooks/queries/useFetchTasksQuery";
 import { useParams } from "react-router";
+import noTasks from "@/assets/noTask.svg";
 
 export default function TaskList() {
   const { workspace_id } = useParams();
   const { data: tasks } = useFetchTasksQuery(Number(workspace_id));
+
+  if (tasks?.length === 0)
+    return (
+      <div className="min-w-[500px] w-full flex items-center justify-center h-[500px]">
+        <div className="flex flex-col items-center">
+          <img src={noTasks} alt="No tasks icons" className="size-56" />
+          <h3 className="mt-2 text-lg font-medium text-dark-text">You're all caught up</h3>
+          <p className="text-dark-subtle">No tasks available. Add one to begin</p>
+        </div>
+      </div>
+    );
 
   return (
     <div className="min-h-screen text-white p-6">
