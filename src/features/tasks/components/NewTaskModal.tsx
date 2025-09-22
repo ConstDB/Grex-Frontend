@@ -47,11 +47,7 @@ export default function NewTaskModal({ children, category }: Props) {
     formState: { errors },
   } = useForm<NewTask>({ defaultValues });
 
-  const {
-    mutate,
-    isPending,
-    error: createTaskError,
-  } = useCreateTaskMutation(Number(workspace_id));
+  const { mutate, isPending, error: createTaskError } = useCreateTaskMutation(Number(workspace_id));
 
   if (createTaskError) toast(createTaskError.message);
 
@@ -61,6 +57,7 @@ export default function NewTaskModal({ children, category }: Props) {
     mutate({
       ...task,
       created_by: user?.user_id,
+      status: "pending",
       category: category,
     });
 
@@ -77,29 +74,17 @@ export default function NewTaskModal({ children, category }: Props) {
           <DialogTitle>Create a Task</DialogTitle>
           {/* TODO: come up with better description later */}
           <DialogDescription>
-            Add a new task by providing its title, description, and other
-            details. Newly created tasks will automatically be set to Pending.
+            Add a new task by providing its title, description, and other details. Newly created tasks will automatically be set
+            to Pending.
           </DialogDescription>
         </DialogHeader>
 
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="flex flex-col space-y-4 mt-4 mb-8">
-            <RHFFormField
-              id="title"
-              label="Task name"
-              error={errors.title?.message}
-            >
-              <Input
-                id="title"
-                placeholder="Task name"
-                {...register("title", { required: "Task name is required" })}
-              />
+            <RHFFormField id="title" label="Task name" error={errors.title?.message}>
+              <Input id="title" placeholder="Task name" {...register("title", { required: "Task name is required" })} />
             </RHFFormField>
-            <RHFFormField
-              id="subject"
-              label="Subject"
-              error={errors.subject?.message}
-            >
+            <RHFFormField id="subject" label="Subject" error={errors.subject?.message}>
               <Input
                 id="subject"
                 placeholder="Subject of the task" // improve this
@@ -108,11 +93,7 @@ export default function NewTaskModal({ children, category }: Props) {
                 })}
               />
             </RHFFormField>
-            <RHFFormField
-              id="description"
-              label="Description"
-              error={errors.description?.message}
-            >
+            <RHFFormField id="description" label="Description" error={errors.description?.message}>
               <Textarea
                 id="description"
                 placeholder="Description"
@@ -129,14 +110,8 @@ export default function NewTaskModal({ children, category }: Props) {
                 rules={{ required: "Start date is required" }}
                 render={({ field }) => (
                   <div className="flex-1">
-                    <DatePicker
-                      label="Start date"
-                      value={field.value}
-                      onChange={(date) => field.onChange(date)}
-                    />
-                    <p className="text-error text-xs">
-                      {errors.start_date?.message}
-                    </p>
+                    <DatePicker label="Start date" value={field.value} onChange={(date) => field.onChange(date)} />
+                    <p className="text-error text-xs">{errors.start_date?.message}</p>
                   </div>
                 )}
               />
@@ -146,14 +121,8 @@ export default function NewTaskModal({ children, category }: Props) {
                 rules={{ required: "Deadline is required" }}
                 render={({ field }) => (
                   <div className="flex-1">
-                    <DatePicker
-                      label="Deadline"
-                      value={field.value}
-                      onChange={(date) => field.onChange(date)}
-                    />
-                    <p className="text-error text-xs">
-                      {errors.deadline?.message}
-                    </p>
+                    <DatePicker label="Deadline" value={field.value} onChange={(date) => field.onChange(date)} />
+                    <p className="text-error text-xs">{errors.deadline?.message}</p>
                   </div>
                 )}
               />
@@ -171,9 +140,7 @@ export default function NewTaskModal({ children, category }: Props) {
                     placeholder="Priority level"
                     onChange={(val) => field.onChange(val)}
                   />
-                  <p className="text-error text-xs">
-                    {errors.priority_level?.message}
-                  </p>
+                  <p className="text-error text-xs">{errors.priority_level?.message}</p>
                 </div>
               )}
             />
@@ -181,11 +148,7 @@ export default function NewTaskModal({ children, category }: Props) {
 
           <DialogFooter>
             <DialogClose asChild>
-              <Button
-                variant="outline"
-                disabled={isPending}
-                onClick={() => reset()}
-              >
+              <Button variant="outline" disabled={isPending} onClick={() => reset()}>
                 Cancel
               </Button>
             </DialogClose>

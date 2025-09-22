@@ -1,17 +1,15 @@
 import UserAvatar from "@/components/UserAvatar";
-import { useAuth } from "@/context/auth-context";
 import { useFetchTasksQuery } from "@/features/tasks/hooks/queries/useFetchTasksQuery";
-import { useFetchWorkspaceQuery } from "@/features/workspace/hooks/queries/useFetchWorkspaceQuery";
+import { useFetchWorkspaceMembersQuery } from "@/features/workspace/hooks/queries/useFetchWorkspaceMembersQuery";
 import type { Notification } from "@/types/notification";
 import { extractTaskId, formatChatDate } from "@/utils";
 import { useParams } from "react-router";
 
 export default function NotificationItem({ notification }: { notification: Notification }) {
-  const { user } = useAuth();
   const { workspace_id } = useParams();
   const { data: tasks } = useFetchTasksQuery(Number(workspace_id));
-  const { data: workspace } = useFetchWorkspaceQuery(Number(workspace_id), user?.user_id);
-  const assignor = workspace?.members.find((m) => m.user_id === notification.user_id);
+  const { data: members } = useFetchWorkspaceMembersQuery(Number(workspace_id));
+  const assignor = members?.find((m) => m.user_id === notification.user_id);
   const task_id = extractTaskId(notification.content);
   const task = tasks?.find((t) => t.task_id === task_id);
 

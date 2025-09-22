@@ -6,7 +6,7 @@ export const createTask = async (newTask: NewTask, workspace_id: number): Promis
   const payload = {
     ...newTask,
     start_date: newTask.start_date.toISOString().split("T")[0],
-    deadline: newTask.deadline.toISOString().split("T")[0],
+    deadline: newTask.deadline.toISOString(),
   };
   await api.post(`/tasks/${workspace_id}`, payload);
 };
@@ -68,4 +68,3 @@ export const editCategory = async (workspace_id: number, category_id: number, na
 export const deleteCategory = async (workspace_id: number, category_id: number): Promise<void> => {
   await api.delete(`/workspace/${workspace_id}/categories/${category_id}`);
 };
-

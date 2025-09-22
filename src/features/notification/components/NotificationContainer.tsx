@@ -14,6 +14,7 @@ import { useNotificationPolling } from "../hooks/useNotificationPolling";
 import emptyNotification from "@/assets/empty_notification.svg";
 
 type Props = PropsWithChildren & {};
+
 export default function NotificationContainer({ children }: Props) {
   const { user } = useAuth();
   const { data: notifications = [] } = useFetchNotificationsQuery(user?.user_id);

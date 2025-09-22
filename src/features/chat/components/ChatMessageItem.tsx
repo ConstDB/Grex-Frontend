@@ -20,7 +20,6 @@ type Props = {
 function ChatMessageItem({ message, showMetadata, isUsersMessage }: Props) {
   const [isHovered, setIsHovered] = useState(false);
   const setReplyingTo = useChatReplyStore((state) => state.setReplyingTo);
-  const photoUrl = getPhotoUrl(message);
   const { workspace_id } = useParams();
   const { user } = useAuth();
   const { mutate: pinMessage } = usePinMessageMutation(Number(workspace_id));
@@ -53,7 +52,11 @@ function ChatMessageItem({ message, showMetadata, isUsersMessage }: Props) {
               <UserAvatar
                 className="size-8"
                 name={message.nickname}
-                photoUrl={(isMessageHistoryItem(message) && message.profile_picture) || undefined}
+                photoUrl={
+                  (isMessageHistoryItem(message) && message.profile_picture) ||
+                  (isIncomingChatMessage(message) && message.avatar) ||
+                  undefined
+                }
               />
             )}
           </div>
@@ -77,10 +80,10 @@ function ChatMessageItem({ message, showMetadata, isUsersMessage }: Props) {
             </div>
           )}
 
-          <div className="flex items-start gap-2">
-            <div className={`min-w-[20%] self-center ${isUsersMessage ? "order-1" : "order-3"} gap-1 pt-1.5`}>
+          <div className={`flex items-start gap-2 flex-1 min-w-[300px] ${isUsersMessage ? "justify-end" : "justify-start"}`}>
+            <div className={`min-w-[20%] self-center ${isUsersMessage ? "order-1" : "order-2"} gap-1 pt-1.5`}>
               {isHovered && (
-                <div className="flex space-x-2">
+                <div className="flex space-x-2 max-w-[80px]">
                   <ActionButton icon={LuReply} onClick={() => setReplyingTo(message)} tooltip="Reply" />
                   <ActionButton icon={BsFillPinAngleFill} onClick={handlePinMessage} tooltip="More options" />
                 </div>
@@ -99,15 +102,6 @@ function ChatMessageItem({ message, showMetadata, isUsersMessage }: Props) {
       </div>
     </motion.div>
   );
-}
-
-function getPhotoUrl(message: ChatMessage): string | null {
-  if (isIncomingChatMessage(message)) {
-    return message.avatar;
-  } else if (isMessageHistoryItem(message)) {
-    return message.profile_picture;
-  }
-  return null;
 }
 
 function ActionButton({
