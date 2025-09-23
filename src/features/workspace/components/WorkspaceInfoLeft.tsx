@@ -1,14 +1,14 @@
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import UserAvatar from "@/components/UserAvatar";
-import type { EditProject, QuickLink, WorkspaceResponse } from "@/types/project";
-import { Edit, Link2 } from "lucide-react";
+import type { EditProject, WorkspaceResponse } from "@/types/project";
+import { formatDateForAPI, timeAgo } from "@/utils";
+import { Edit } from "lucide-react";
 import { useState } from "react";
 import { useParams } from "react-router";
 import { useEditWorkspaceMutation } from "../hooks/mutations/useEditWorkspaceMutation";
 import WorkspaceInfoDisplay from "./WorkspaceInfoDisplay";
 import WorkspaceInfoEdit from "./WorkspaceInfoEdit";
-import { formatDateForAPI, timeAgo } from "@/utils";
+import QuickLinksSection from "./QuickLinksSection";
 
 type Props = {
   workspace: WorkspaceResponse;
@@ -23,22 +23,9 @@ type Props = {
     };
     time: string;
   }[];
-  links: QuickLink[];
-  newLink: QuickLink;
-  setNewLink: React.Dispatch<React.SetStateAction<QuickLink>>;
-  handleAddLink: () => void;
 };
 
-export default function WorkspaceInfoLeft({
-  workspace,
-  progress,
-  daysLeft,
-  activities,
-  links,
-  newLink,
-  setNewLink,
-  handleAddLink,
-}: Props) {
+export default function WorkspaceInfoLeft({ workspace, progress, daysLeft, activities }: Props) {
   const [editing, setEditing] = useState(false);
   const { workspace_id } = useParams();
   const { mutate: editWorkspace } = useEditWorkspaceMutation(Number(workspace_id));
@@ -90,44 +77,7 @@ export default function WorkspaceInfoLeft({
         </ul>
       </div>
 
-      {/* Quick Links */}
-      <div>
-        <div className="font-semibold mb-2">Quick Links</div>
-        <ul className="space-y-2 mb-2">
-          {links.map((link, index) => (
-            <li key={`${link.link_name}-${link.link_url}-${index}`}>
-              <a
-                href={link.link_url}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 px-3 py-2 rounded hover:bg-muted transition text-sm font-medium"
-              >
-                <Link2 className="w-4 h-4 text-primary" />
-                <span className="truncate">{link.link_name}</span>
-                <span className="text-muted-foreground truncate">{link.link_url}</span>
-              </a>
-            </li>
-          ))}
-        </ul>
-
-        <div className="flex gap-2">
-          <Input
-            placeholder="Label"
-            value={newLink.link_name}
-            onChange={(e) => setNewLink({ ...newLink, link_name: e.target.value })}
-            className="w-1/3"
-          />
-          <Input
-            placeholder="URL"
-            value={newLink.link_url}
-            onChange={(e) => setNewLink({ ...newLink, link_url: e.target.value })}
-            className="w-1/2"
-          />
-          <Button size="sm" onClick={handleAddLink}>
-            Add
-          </Button>
-        </div>
-      </div>
+      <QuickLinksSection />
     </div>
   );
 }

@@ -1,9 +1,6 @@
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-import type { QuickLink } from "@/types/project";
 import { parseLocalDate } from "@/utils";
-import { useState } from "react";
 import { useParams } from "react-router";
-import { useCreateQuickLinkMutation } from "../hooks/mutations/useCreateQuickLinkMutation";
 import { useFetchWorkspaceMembersQuery } from "../hooks/queries/useFetchWorkspaceMembersQuery";
 import { useFetchWorkspaceQuery } from "../hooks/queries/useFetchWorkspaceQuery";
 import WorkspaceInfoLeft from "./WorkspaceInfoLeft";
@@ -42,14 +39,6 @@ const mockActivities = [
   },
 ];
 
-const mockLinks: QuickLink[] = [
-  {
-    link_name: "Google Docs",
-    link_url: "https://docs.google.com/document/d/1WR_CVYh1Ph8IdwzjrmjVNYagfen_kqrbeftqhuw0cuw/edit?tab=t.0",
-  },
-  { link_name: "GitHub Repo", link_url: "https://github.com/ConstDB" },
-];
-
 type Props = {
   open: boolean;
   onOpenChange: React.Dispatch<React.SetStateAction<boolean>>;
@@ -61,23 +50,6 @@ export default function WorkspaceInfoDialog({ open, onOpenChange }: Props) {
 
   const { data: workspace } = useFetchWorkspaceQuery(workspaceId);
   const { data: members = [] } = useFetchWorkspaceMembersQuery(workspaceId);
-
-  const { mutate: createQuickLink } = useCreateQuickLinkMutation(workspaceId);
-
-  const [links, setLinks] = useState(mockLinks);
-  const [newLink, setNewLink] = useState({ link_name: "", link_url: "" });
-
-  const handleAddLink = () => {
-    if (newLink.link_name && newLink.link_url) {
-      setLinks([...links, { ...newLink }]);
-      setNewLink({ link_name: "", link_url: "" });
-    }
-
-    createQuickLink({
-      link_name: newLink.link_name,
-      link_url: newLink.link_url,
-    });
-  };
 
   const progress = 60; // temp
 
@@ -96,16 +68,7 @@ export default function WorkspaceInfoDialog({ open, onOpenChange }: Props) {
       <DialogContent className="min-w-[1100px] w-full p-0 flex flex-col overflow-hidden max-h-[90vh]">
         {workspace ? (
           <div className="flex flex-col md:flex-row h-[80vh] overflow-hidden">
-            <WorkspaceInfoLeft
-              workspace={workspace}
-              progress={progress}
-              daysLeft={daysLeft}
-              activities={mockActivities}
-              links={links}
-              newLink={newLink}
-              setNewLink={setNewLink}
-              handleAddLink={handleAddLink}
-            />
+            <WorkspaceInfoLeft workspace={workspace} progress={progress} daysLeft={daysLeft} activities={mockActivities} />
             <WorkspaceInfoTabs members={members} />
           </div>
         ) : (
