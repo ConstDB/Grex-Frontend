@@ -9,6 +9,7 @@ import type {
   EditProject,
   RecentActivity,
   QuickLink,
+  NewQuickLink,
 } from "@/types/project";
 
 export const createWorkspace = async (workspace: NewProject): Promise<Project> => {
@@ -57,6 +58,11 @@ export const getWorkspaceRecentActivities = async (workspace_id: number): Promis
   return data;
 };
 
-export const createQuickLink = async (workspace_id: number, payload: QuickLink): Promise<void> => {
+export const createQuickLink = async (workspace_id: number, payload: NewQuickLink): Promise<void> => {
   await api.post<QuickLink>(`/workspaces/${workspace_id}/quick-links`, payload);
+};
+
+export const getWorkspaceQuickLinks = async (workspace_id: number): Promise<QuickLink[]> => {
+  const { data } = await api.get<QuickLink[]>(`/workspaces/${workspace_id}/quick-links`);
+  return data;
 };
