@@ -7,6 +7,7 @@ import type {
   UserWorkspacesResponse,
   WorkspacePayload,
   EditProject,
+  RecentActivity,
 } from "@/types/project";
 
 export const createWorkspace = async (workspace: NewProject): Promise<Project> => {
@@ -48,4 +49,9 @@ export const kickMember = async (workspace_id: number, user_id: number): Promise
 
 export const makeMemberLeader = async (workspace_id: number, user_id: number): Promise<void> => {
   await api.patch(`/workspace/${workspace_id}/members/${user_id}`, { role: "leader" });
+};
+
+export const getWorkspaceRecentActivities = async (workspace_id: number): Promise<RecentActivity[]> => {
+  const { data } = await api.get<RecentActivity[]>(`/workspaces/${workspace_id}/recent-activities`);
+  return data;
 };
