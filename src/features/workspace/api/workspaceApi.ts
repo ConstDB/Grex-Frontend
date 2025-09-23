@@ -8,6 +8,7 @@ import type {
   WorkspacePayload,
   EditProject,
   RecentActivity,
+  QuickLink,
 } from "@/types/project";
 
 export const createWorkspace = async (workspace: NewProject): Promise<Project> => {
@@ -54,4 +55,8 @@ export const makeMemberLeader = async (workspace_id: number, user_id: number): P
 export const getWorkspaceRecentActivities = async (workspace_id: number): Promise<RecentActivity[]> => {
   const { data } = await api.get<RecentActivity[]>(`/workspaces/${workspace_id}/recent-activities`);
   return data;
+};
+
+export const createQuickLink = async (workspace_id: number, payload: QuickLink): Promise<void> => {
+  await api.post<QuickLink>(`/workspaces/${workspace_id}/quick-links`, payload);
 };
