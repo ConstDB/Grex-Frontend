@@ -49,6 +49,10 @@ export const editTask = async (
   return data;
 };
 
+export const markTaskAsDone = async (workspace_id: number, task_id: number) => {
+  await api.patch(`/tasks/${workspace_id}/${task_id}`, { status: "done", marked_done_at: new Date() });
+};
+
 export const deleteTask = async (workspace_id: number, task_id: number) => {
   await api.delete(`/tasks/${workspace_id}/${task_id}`);
 };

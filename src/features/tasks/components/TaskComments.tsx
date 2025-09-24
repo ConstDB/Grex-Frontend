@@ -14,8 +14,8 @@ export default function TaskComments({ taskId }: Props) {
   if (error) toast(error.message);
 
   return (
-    <div className="h-[700px]">
-      <div className="max-h-[530px] h-[530px] overflow-y-scroll">
+    <div className="h-[400px]">
+      <div className="max-h-[470px] h-[470px] overflow-y-scroll">
         {comments && comments.length === 0 && (
           <div className="flex flex-col items-center justify-between h-60">
             <img src={noComments} alt="no attachments" />

@@ -1,10 +1,12 @@
 import noDocuments from "@/assets/noDocuments.svg";
 import PageLoader from "@/components/PageLoader";
+import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Sheet, SheetContent, SheetDescription, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import type { Task } from "@/types/task";
 import { Label } from "@radix-ui/react-label";
+import { Check } from "lucide-react";
 import { useState, type PropsWithChildren } from "react";
 import { FaRegComments } from "react-icons/fa";
 import { GoKebabHorizontal } from "react-icons/go";
@@ -15,6 +17,7 @@ import { useParams } from "react-router";
 import { toast } from "sonner";
 import { useCreateSubtaskMutation } from "../hooks/mutations/useCreateSubtaskMutation";
 import { useDeleteTaskMutation } from "../hooks/mutations/useDeleteTaskMutation";
+import { useMarkTaskAsDoneMutation } from "../hooks/mutations/useMarkTaskAsDoneMutation";
 import { useFetchSubtasksQuery } from "../hooks/queries/useFetchSubtasksQuery";
 import EditTask from "./EditTask";
 import SubtaskList from "./SubtaskList";
@@ -36,13 +39,16 @@ export default function TaskSheet({ children, task }: Props) {
   const [newSubtask, setNewSubtask] = useState("");
 
   const { workspace_id } = useParams();
+  const workspaceId = Number(workspace_id);
 
-  const { mutate: deleteTask } = useDeleteTaskMutation(Number(workspace_id));
-  const { mutate } = useCreateSubtaskMutation(task.task_id);
+  const { mutate: deleteTask } = useDeleteTaskMutation(workspaceId);
+  const { mutate: createSubtask } = useCreateSubtaskMutation(task.task_id);
+  const { mutate: markTaskComplete } = useMarkTaskAsDoneMutation(workspaceId);
+
   const { data: subtasks = [], isPending, error } = useFetchSubtasksQuery(task.task_id);
 
   const handleAddSubtask = () => {
-    mutate({ description: newSubtask });
+    createSubtask({ description: newSubtask });
     setIsAdding(false);
     toast.success("Subtask added");
     setNewSubtask("");
@@ -56,12 +62,36 @@ export default function TaskSheet({ children, task }: Props) {
     setIsEdditing(true);
   };
 
+  const handleMarkTaskAsDone = () => {
+    markTaskComplete(task.task_id, {
+      onSuccess: () => toast.success("Task marked as done"),
+      onError: (error) => toast.error("Failed to mark task as done", { description: error.message }),
+    });
+  };
+
   if (error) toast(error.message);
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger>{children}</SheetTrigger>
       <SheetContent className="px-2">
+        <div className="py-4 px-2 border-b">
+          <Button
+            disabled={task.status === "done"}
+            onClick={handleMarkTaskAsDone}
+            className="flex items-center space-x-2 px-4 py-2 border-t border-t-brand-primary rounded bg-brand-primary hover:bg-brand-dark"
+          >
+            {task.status === "pending" || task.status === "overdue" ? (
+              <>
+                <Check />
+                <span className="text-light-text">Mark Complete</span>
+              </>
+            ) : (
+              "Completed"
+            )}
+          </Button>
+        </div>
+
         <div className="h-11 flex justify-between items-center">
           <button onClick={() => setOpen(false)}>
             <MdKeyboardDoubleArrowRight className="size-4 text-muted-foreground" />
@@ -148,7 +178,7 @@ export default function TaskSheet({ children, task }: Props) {
               </div>
             )}
           </TabsContent>
-          <TabsContent value="comments" className="h-full min-h-[550px] max-h-[600px]">
+          <TabsContent value="comments" className="h-full ">
             <TaskComments taskId={task.task_id} />
           </TabsContent>
           <TabsContent value="attachments">
