@@ -1,39 +1,18 @@
+import { ScrollArea } from "@/components/ui/scroll-area";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { ChatImageViewer } from "@/features/workspace/components/ChatImageViewer";
+import { useFetchWorkspaceMembersQuery } from "@/features/workspace/hooks/queries/useFetchWorkspaceMembersQuery";
+import { useFetchWorkspaceQuery } from "@/features/workspace/hooks/queries/useFetchWorkspaceQuery";
+import { useChatReplyStore } from "@/stores/useChatReplyStore";
+import { formatDateToLong } from "@/utils";
+import { FileIcon, ImageIcon, UsersIcon } from "lucide-react";
+import { BsPinAngle } from "react-icons/bs";
+import { useParams } from "react-router";
 import ChatHeader from "./ChatHeader";
 import ChatInput from "./ChatInput";
 import ChatMessageList from "./ChatMessageList";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { FileIcon, ImageIcon, UsersIcon } from "lucide-react";
-import { useFetchWorkspaceQuery } from "@/features/workspace/hooks/queries/useFetchWorkspaceQuery";
-import { useParams } from "react-router";
-import { formatDateToLong } from "@/utils";
-import { useChatReplyStore } from "@/stores/useChatReplyStore";
-import ReplyPreview from "./ReplyPreview";
-import { useFetchWorkspaceMembersQuery } from "@/features/workspace/hooks/queries/useFetchWorkspaceMembersQuery";
-import { BsPinAngle } from "react-icons/bs";
 import PinnedMessagesDialog from "./PinnedMessagesDialog";
-
-// Mock data
-const mockMembers = [
-  {
-    id: 1,
-    name: "John Doe",
-    avatar: "https://github.com/shadcn.png",
-    status: "online",
-  },
-  {
-    id: 2,
-    name: "Jane Smith",
-    avatar: "https://github.com/shadcn.png",
-    status: "offline",
-  },
-  {
-    id: 3,
-    name: "Mike Johnson",
-    avatar: "https://github.com/shadcn.png",
-    status: "online",
-  },
-];
+import ReplyPreview from "./ReplyPreview";
 
 const mockFiles = [
   {
@@ -50,38 +29,6 @@ const mockFiles = [
     type: "doc",
     size: "1.1 MB",
     uploadedBy: "Jane Smith",
-    date: "2024-03-14",
-  },
-];
-
-const mockImages = [
-  {
-    id: 1,
-    url: "https://picsum.photos/100",
-    uploadedBy: "John Doe",
-    date: "2024-03-15",
-  },
-  {
-    id: 2,
-    url: "https://picsum.photos/100",
-    uploadedBy: "Jane Smith",
-    date: "2024-03-14",
-  },
-];
-
-const mockLinks = [
-  {
-    id: 1,
-    title: "Project Roadmap",
-    url: "https://example.com/roadmap",
-    sharedBy: "John Doe",
-    date: "2024-03-15",
-  },
-  {
-    id: 2,
-    title: "Design Assets",
-    url: "https://example.com/assets",
-    sharedBy: "Jane Smith",
     date: "2024-03-14",
   },
 ];
@@ -159,7 +106,7 @@ export default function ChatContainer() {
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Members</span>
-                  <span>{mockMembers.length}</span>
+                  <span>{members.length}</span>
                 </div>
               </div>
             </div>
@@ -217,18 +164,7 @@ export default function ChatContainer() {
               </TabsContent>
 
               <TabsContent value="media" className="m-0">
-                <div className="p-4">
-                  <div className="grid grid-cols-3 gap-2">
-                    {mockImages.map((image) => (
-                      <div
-                        key={image.id}
-                        className="aspect-square rounded-md overflow-hidden border border-dark-muted hover:opacity-90 transition-opacity cursor-pointer"
-                      >
-                        <img src={image.url} alt="" className="w-full h-full object-cover" />
-                      </div>
-                    ))}
-                  </div>
-                </div>
+                <ChatImageViewer />
               </TabsContent>
             </div>
           </Tabs>

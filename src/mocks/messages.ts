@@ -1,61 +1,20 @@
-import type { AnyChatMessage } from "@/types/chat";
-import { getRandomUserImage } from "@/utils";
+export type ChatImage = {
+  id: string | number;
+  src: string;
+  alt?: string;
+};
 
-export const dummyMessages: AnyChatMessage[] = [
-  {
-    message_id: 1,
-    workspace_id: 2,
-    sender_id: 1,
-    profile_picture: getRandomUserImage(),
-    nickname: "Darren",
-    message_type: "text",
-    reply_to: null,
-    sent_at: "2025-08-24T15:56:57.221248+00:00",
-    content: "Hey team, how’s it going?",
-    file_url: null,
-    file_type: null,
-    question: null,
-  },
-  {
-    message_id: 2,
-    workspace_id: 2,
-    sender_id: 2,
-    profile_picture: getRandomUserImage(),
-    nickname: "Jonel",
-    message_type: "text",
-    reply_to: 1,
-    sent_at: "2025-08-24T15:57:01.094584+00:00",
-    content: "All good Darren, just working on the UI 🚀",
-    file_url: null,
-    file_type: null,
-    question: null,
-  },
-  {
-    message_id: 3,
-    workspace_id: 2,
-    sender_id: 3,
-    profile_picture: getRandomUserImage(),
-    nickname: "Mika",
-    message_type: "file",
-    reply_to: null,
-    sent_at: "2025-08-24T15:59:10.321248+00:00",
-    content: "Here’s the design mockup",
-    file_url: "https://example.com/design.pdf",
-    file_type: "pdf",
-    question: null,
-  },
-  {
-    message_id: 4,
-    workspace_id: 2,
-    sender_id: 4,
-    profile_picture: getRandomUserImage(),
-    nickname: "Alex",
-    message_type: "poll",
-    reply_to: null,
-    sent_at: "2025-08-24T16:00:45.654981+00:00",
-    content: "testing!",
-    file_url: null,
-    file_type: null,
-    question: "Which framework should we use?",
-  },
+export const dummyImages: ChatImage[] = [
+  { id: 1, src: "https://picsum.photos/id/1015/600/400", alt: "Mountain view" },
+  { id: 2, src: "https://picsum.photos/id/1025/600/400", alt: "Dog portrait" },
+  { id: 3, src: "https://picsum.photos/id/1035/600/400", alt: "Beach scenery" },
+  { id: 4, src: "https://picsum.photos/id/1041/600/400", alt: "Forest trail" },
+  { id: 5, src: "https://picsum.photos/id/1049/600/400", alt: "Snowy peak" },
+  { id: 6, src: "https://picsum.photos/id/1052/600/400", alt: "City skyline" },
+  { id: 7, src: "https://picsum.photos/id/1062/600/400", alt: "Bridge at night" },
+  { id: 8, src: "https://picsum.photos/id/1074/600/400", alt: "Lake reflection" },
+  { id: 9, src: "https://picsum.photos/id/1084/600/400", alt: "Foggy forest" },
+  { id: 10, src: "https://picsum.photos/id/1080/600/400", alt: "Desert dunes" },
+  { id: 11, src: "https://picsum.photos/id/109/600/400", alt: "Boats on water" },
+  { id: 12, src: "https://picsum.photos/id/110/600/400", alt: "Countryside road" },
 ];
