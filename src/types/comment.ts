@@ -1,7 +1,7 @@
 export interface NewComment {
   content?: string;
   sender_id: number;
-  attachment?: NewCommentAttachment;
+  attachments?: NewCommentAttachment;
 }
 
 export interface NewCommentAttachment {
@@ -9,13 +9,11 @@ export interface NewCommentAttachment {
   file_size: number;
   file_type: string;
   file_url: string;
-  uploaded_by: number;
-  uploaded_at: Date;
 }
 
 export interface TaskAttachment extends NewCommentAttachment {
   comment_id: number;
-  attachment_id: number;
+  comment_attachment_id: number;
 }
 
 export interface Comment extends Omit<NewComment, "attachment"> {
@@ -24,7 +22,5 @@ export interface Comment extends Omit<NewComment, "attachment"> {
   created_at: Date;
   profile_picture: string;
   sender_name: string;
-  attachment?: TaskAttachment;
+  attachments?: TaskAttachment; // multiple attachment in a comment isn't allowed. Suggest to change this from attachments -> attachment
 }
-
-
