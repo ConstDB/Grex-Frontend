@@ -154,19 +154,19 @@ export const mapTasksToEvents = (tasks: Task[]): CalendarEvent[] => {
   });
 };
 
-export const normalizeHistoryItem = (item: MessageHistoryItem): IncomingChatMessage => {
-  return {
-    message_id: item.message_id,
-    workspace_id: item.workspace_id,
-    sender_id: item.sender_id,
-    avatar: item.profile_picture,
-    nickname: item.nickname,
-    type: item.message_type as "text" | "file" | "poll",
-    content: item.content,
-    reply_to: item.reply_to,
-    sent_at: item.sent_at,
-  };
-};
+// export const normalizeHistoryItem = (item: MessageHistoryItem): IncomingChatMessage => {
+//   return {
+//     message_id: item.message_id,
+//     workspace_id: item.workspace_id,
+//     sender_id: item.sender_id,
+//     avatar: item.profile_picture,
+//     nickname: item.nickname,
+//     type: item.message_type as "text" | "file" | "poll",
+//     content: item.content,
+//     reply_to: item.reply_to,
+//     sent_at: item.sent_at,
+//   };
+// };
 
 export function isIncomingChatMessage(msg: ChatMessage): msg is IncomingChatMessage {
   return "message_id" in msg;
@@ -177,7 +177,7 @@ export function isPendingChatMessage(msg: ChatMessage): msg is PendingChatMessag
 }
 
 export function isMessageHistoryItem(msg: ChatMessage): msg is MessageHistoryItem {
-  return "message_type" in msg;
+  return "is_pinned" in msg;
 }
 
 export const timeAgo = (input: Date | string): string => {
@@ -389,3 +389,6 @@ export function getCompletedTasksByDay(tasks: UserTask[]) {
     completed: counts[days.indexOf(day)],
   }));
 }
+export const getFileExtension = (filename: string) => {
+  return filename.split(".").pop()?.toUpperCase() || "FILE";
+};
