@@ -1,13 +1,25 @@
+import { useFetchWorkspaceMembersQuery } from "@/features/workspace/hooks/queries/useFetchWorkspaceMembersQuery";
 import SubtaskItem from "./Subtask";
-import type { Subtask } from "@/types/task";
+import type { Subtask, Task } from "@/types/task";
+import { useFetchTaskAssigneesQuery } from "../hooks/queries/useFetchTaskAssigneesQuery";
+import { useTaskPermissions } from "../hooks/useTaskPermissions";
+import { useParams } from "react-router";
 
 type Props = {
+  task: Task;
   subtasks: Subtask[];
   task_id: number;
   className?: string;
 };
 
-export default function SubtaskList({ task_id, subtasks, className }: Props) {
+export default function SubtaskList({ task, task_id, subtasks, className }: Props) {
+  const { workspace_id } = useParams();
+
+  const { data: members = [] } = useFetchWorkspaceMembersQuery(Number(workspace_id));
+  const { data: assignees = [] } = useFetchTaskAssigneesQuery(task_id);
+
+  const { isLeader, isInvolved, isCreator } = useTaskPermissions(task, members, assignees);
+
   return (
     <ul className={className}>
       {subtasks?.map((subtask) => (
@@ -15,6 +27,9 @@ export default function SubtaskList({ task_id, subtasks, className }: Props) {
           key={subtask.subtask_id}
           task_id={task_id}
           subtask={subtask}
+          isLeader={isLeader}
+          isInvolved={isInvolved}
+          isCreator={isCreator}
         />
       ))}
     </ul>

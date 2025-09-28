@@ -1,3 +1,5 @@
+import { useAuth } from "@/context/auth-context";
+import { useFetchWorkspaceMembersQuery } from "@/features/workspace/hooks/queries/useFetchWorkspaceMembersQuery";
 import type { TaskGroups } from "@/types/task";
 import { groupTasksByCategory } from "@/utils";
 import type { DropResult } from "@hello-pangea/dnd";
@@ -7,20 +9,25 @@ import { GoPlus } from "react-icons/go";
 import { RxSection } from "react-icons/rx";
 import { useParams } from "react-router";
 import { toast } from "sonner";
+import { usePatchTaskMutation } from "../../hooks/mutations/usePatchTaskMutation";
 import { useFetchCategoryQuery } from "../../hooks/queries/useFetchCategoriesQuery";
 import { useFetchTasksQuery } from "../../hooks/queries/useFetchTasksQuery";
 import NewTaskModal from "../NewTaskModal";
 import KanbanColumn from "./KanbanColumn";
 import NewCategoryInput from "./NewCategoryInput";
-import { usePatchTaskMutation } from "../../hooks/mutations/usePatchTaskMutation";
 
 export default function KanbanContainer() {
+  const { user } = useAuth();
+  const { workspace_id } = useParams();
+
   const [activeNewCategory, setActiveNewCategory] = useState<string | null>(null);
   const [isAddNewCategory, setIsAddNewCategory] = useState(false);
 
-  const { workspace_id } = useParams();
-  const { data: categories } = useFetchCategoryQuery(Number(workspace_id));
+  const { data: members = [] } = useFetchWorkspaceMembersQuery(Number(workspace_id));
+  const { data: categories = [] } = useFetchCategoryQuery(Number(workspace_id));
   const { data: tasks = [] } = useFetchTasksQuery(Number(workspace_id));
+
+  const isLeader = members.some((m) => m.user_id === user?.user_id && m.role === "leader");
 
   const { mutate: editTask } = usePatchTaskMutation(Number(workspace_id));
 
@@ -28,6 +35,11 @@ export default function KanbanContainer() {
 
   const handleDragEnd = (result: DropResult) => {
     const { source, destination } = result;
+
+    if (!isLeader) {
+      toast.error("You don't have permission to move tasks");
+      return;
+    }
 
     if (!destination) return;
 
@@ -42,20 +54,24 @@ export default function KanbanContainer() {
       const destinationColumn = newPositions[destination.droppableId as keyof TaskGroups];
       destinationColumn.splice(destination.index, 0, movedTask);
 
-      editTask({
-        id: movedTask.task_id,
-        payload: {
-          title: movedTask.title,
-          subject: movedTask.subject,
-          description: movedTask.description,
-          priority_level: movedTask.priority_level,
-          start_date: movedTask.start_date,
-          deadline: movedTask.deadline,
-          category: destination.droppableId,
+      editTask(
+        {
+          id: movedTask.task_id,
+          payload: {
+            title: movedTask.title,
+            subject: movedTask.subject,
+            description: movedTask.description,
+            priority_level: movedTask.priority_level,
+            start_date: movedTask.start_date,
+            deadline: movedTask.deadline,
+            category: destination.droppableId,
+          },
         },
-      });
-
-      toast.success("Task moved to different category");
+        {
+          onSuccess: () => toast.success("Task moved to different category"),
+          onError: () => toast.error("Failed to move task to different category"),
+        }
+      );
     } else {
       sourceColumn.splice(destination.index, 0, movedTask);
       toast("Order changed");
@@ -69,7 +85,7 @@ export default function KanbanContainer() {
           Object.entries(positions).map(([type, task]) => (
             <div key={type} className="flex gap-2 ">
               <div>
-                <KanbanColumn type={type} tasks={task} />
+                <KanbanColumn type={type} tasks={task} isLeader={isLeader} />
                 <NewTaskModal category={type}>
                   <button className="ml-4 flex space-x-2 items-center">
                     <GoPlus className="text-brand-primary size-6" />
