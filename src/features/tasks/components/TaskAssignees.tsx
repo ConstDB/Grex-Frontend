@@ -6,7 +6,12 @@ import AssigneeItem from "./AssigneeItem";
 import MembersCombobox from "./MembersCombobox";
 import { useState } from "react";
 
-export default function TaskAssignees({ id }: { id: number }) {
+type Props = {
+  id: number;
+  canManageAssignees: boolean;
+};
+
+export default function TaskAssignees({ id, canManageAssignees }: Props) {
   const [open, setOpen] = useState(false);
   const { data: tasksAssignees } = useFetchTaskAssigneesQuery(id);
 
@@ -18,7 +23,7 @@ export default function TaskAssignees({ id }: { id: number }) {
       </div>
 
       <div className="flex max-w-[400px] overflow-x-auto gap-2 no-scrollbar items-center">
-        <MembersCombobox id={id} open={open} setOpen={setOpen}>
+        <MembersCombobox id={id} open={open} setOpen={setOpen} canManageAssignees={canManageAssignees}>
           <div className="p-1 rounded-full hover:bg-dark-surface bg-dark-muted flex justify-center items-center">
             <BiPlus />
           </div>
@@ -27,7 +32,7 @@ export default function TaskAssignees({ id }: { id: number }) {
         {!tasksAssignees && <div className="text-sm">No assignees yet.</div>}
 
         {tasksAssignees?.map((assignee) => (
-          <AssigneeItem key={assignee.user_id} assignee={assignee} id={id} />
+          <AssigneeItem key={assignee.user_id} assignee={assignee} id={id} canManageAssignees={canManageAssignees} />
         ))}
       </div>
     </div>

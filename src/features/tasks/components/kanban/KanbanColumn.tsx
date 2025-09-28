@@ -1,23 +1,24 @@
 import type { Task } from "@/types/task";
 import { capitalizeWord } from "@/utils";
 import { Draggable, Droppable } from "@hello-pangea/dnd";
-import { GoKebabHorizontal } from "react-icons/go";
-import KanbanTask from "./KanbanTask";
-import CategoryDropdown from "../CategoryDropdown";
 import { useState } from "react";
+import { GoKebabHorizontal } from "react-icons/go";
+import CategoryDropdown from "../CategoryDropdown";
+import KanbanTask from "./KanbanTask";
 import NewCategoryInput from "./NewCategoryInput";
 
 interface Props {
   type: string;
   tasks: Task[];
+  isLeader: boolean;
 }
 
-export default function KanbanColumn({ type, tasks }: Props) {
+export default function KanbanColumn({ type, tasks, isLeader }: Props) {
   const [isEditingCategory, setIsEditingCategory] = useState(false);
 
   return (
     <div className="w-full min-w-[350px] max-w-[350px] mt-4 h-auto max-h-[750px] rounded">
-      <div className="flex justify-between sticky top-2">
+      <div className="flex justify-between items-center sticky top-2">
         {!isEditingCategory && (
           <div className="flex items-center space-x-2 mb-4">
             <span className="text-lg font-semibold">{capitalizeWord(type)}</span>
@@ -27,13 +28,15 @@ export default function KanbanColumn({ type, tasks }: Props) {
           </div>
         )}
 
-        {isEditingCategory ? (
-          <NewCategoryInput category={type} onCancel={() => setIsEditingCategory(false)} />
-        ) : (
-          <CategoryDropdown onEdit={() => setIsEditingCategory(true)} category={type}>
-            <GoKebabHorizontal />
-          </CategoryDropdown>
-        )}
+        <div>
+          {isEditingCategory ? (
+            <NewCategoryInput category={type} onCancel={() => setIsEditingCategory(false)} />
+          ) : (
+            <CategoryDropdown onEdit={() => setIsEditingCategory(true)} category={type} isLeader={isLeader}>
+              <GoKebabHorizontal />
+            </CategoryDropdown>
+          )}
+        </div>
       </div>
 
       <Droppable droppableId={type}>

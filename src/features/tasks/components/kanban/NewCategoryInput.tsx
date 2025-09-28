@@ -19,8 +19,7 @@ export default function NewCategoryInput({ onCancel, category }: Props) {
 
   const { data: categories = [] } = useFetchCategoryQuery(workspaceId);
   const { mutate: editCategory } = useEditCategoryMutation(workspaceId);
-  const { mutate: createCategory, error } =
-    useCreateCategoryMutation(workspaceId);
+  const { mutate: createCategory } = useCreateCategoryMutation(workspaceId);
 
   const handleSubmit = () => {
     // this means the user only wants to edit
@@ -32,27 +31,26 @@ export default function NewCategoryInput({ onCancel, category }: Props) {
       }
     } else {
       // user is creating a new category
-      createCategory(newCategory);
+      createCategory(newCategory, {
+        onSuccess: () => toast.success("Category created"),
+        onError: () => toast.error("Failed to create category"),
+      });
       toast(`Create ${newCategory} category.`);
     }
 
     onCancel();
   };
 
-  if (error) toast(error.message);
-
   return (
-    <div className="flex flex-col space-y-3 w-full min-w-[220px] self-start rounded-sm mt-6">
+    <div className="flex flex-col space-y-3 w-full max-w-[250px] self-start rounded-sm mt-6">
       <Input
         type="text"
         value={newCategory}
         onChange={(e) => setNewCategory(e.target.value)}
+        onKeyDown={(e) => e.key === "Enter" && handleSubmit()}
       />
       <div className="flex space-x-2 text-sm">
-        <button
-          onClick={handleSubmit}
-          className="px-2 py-1 rounded text-light-text bg-brand-primary hover"
-        >
+        <button onClick={handleSubmit} className="px-2 py-1 rounded text-light-text bg-brand-primary hover">
           {category ? "Save changes" : "Add Category"}
         </button>
         <button onClick={onCancel} className="px-2 py-1">

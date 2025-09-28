@@ -13,9 +13,10 @@ type Props = PropsWithChildren & {
   id: number;
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
+  canManageAssignees: boolean;
 };
 
-export default function MembersCombobox({ id, open, setOpen, children }: Props) {
+export default function MembersCombobox({ id, open, setOpen, canManageAssignees, children }: Props) {
   const { workspace_id } = useParams();
   const { data: assignees } = useFetchTaskAssigneesQuery(id);
   const { mutate: addAssignee } = useAssignTaskMemberMutation(id);
@@ -37,12 +38,17 @@ export default function MembersCombobox({ id, open, setOpen, children }: Props) 
             <CommandInput placeholder="Search member..." />
             <CommandList>
               <CommandEmpty>No members found.</CommandEmpty>
-              <CommandGroup>
+              <CommandGroup title={!canManageAssignees ? "You cannot assign members to this task" : ""}>
                 {availableMembers?.map((member) => {
                   const fullname = member.first_name + " " + member.last_name;
 
                   return (
-                    <CommandItem key={member.user_id} value={fullname} onSelect={() => handleAddAssignee(member)}>
+                    <CommandItem
+                      key={member.user_id}
+                      disabled={!canManageAssignees}
+                      value={fullname}
+                      onSelect={() => handleAddAssignee(member)}
+                    >
                       <div className="flex space-x-3">
                         <UserAvatar name={fullname} photoUrl={member.profile_picture ?? undefined} />
                         <span>{fullname}</span>
