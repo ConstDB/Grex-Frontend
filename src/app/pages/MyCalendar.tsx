@@ -26,7 +26,9 @@ export default function MyCalendar() {
   return (
     <div className="w-full p-8">
       <h1 className="text-xl text-dark-text font-bold">My Calendar</h1>
-      <p className="text-lg text-dark-subtle">Stay on top of your schedule with every task from all your workspaces in one place</p>
+      <p className="text-lg text-dark-subtle">
+        Stay on top of your schedule with every task from all your workspaces in one place
+      </p>
       <ProjectCalendar events={mapUserTasksToEvents(tasks)} mode="user" />
     </div>
   );

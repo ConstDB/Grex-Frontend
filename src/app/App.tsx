@@ -13,7 +13,6 @@ const Signup = lazy(() => import("@/features/auth/pages/Signup"));
 const Signin = lazy(() => import("@/features/auth/pages/Signin"));
 const AppLayout = lazy(() => import("../components/AppLayout"));
 const MyTasks = lazy(() => import("./pages/MyTasks"));
-const MyProjects = lazy(() => import("./pages/MyProjects"));
 const MyCalendar = lazy(() => import("./pages/MyCalendar"));
 const Profile = lazy(() => import("./pages/Profile"));
 
@@ -39,10 +38,7 @@ export default function App() {
         { path: "calendar", element: withSuspense(<MyCalendar />) },
         {
           path: "my-projects",
-          children: [
-            { index: true, element: withSuspense(<MyProjects />) },
-            { path: ":workspace_id/:workspace_name", element: withSuspense(<WorkspaceContainer />) },
-          ],
+          children: [{ path: ":workspace_id/:workspace_name", element: withSuspense(<WorkspaceContainer />) }],
         },
       ],
     },

@@ -92,10 +92,10 @@ function CustomMonthEvent({ calendarEvent, mode = "workspace" }: CustomMonthEven
   if (mode === "user") {
     const [taskTitle, workspaceName] = title!.split(" | ");
     displayTitle = (
-      <>
+      <div>
         <span className="truncate">{taskTitle}</span>
         <span className="text-brand-primary font-semibold whitespace-nowrap"> | {workspaceName}</span>
-      </>
+      </div>
     );
   }
 
@@ -168,7 +168,7 @@ function CustomMonthEvent({ calendarEvent, mode = "workspace" }: CustomMonthEven
                 ))}
               </motion.div>
             ) : (
-              <>
+              <div className="flex space-x-1">
                 {visibleAssignees.map((assignee, index) => (
                   <motion.div
                     key={assignee.user_id}
@@ -196,15 +196,9 @@ function CustomMonthEvent({ calendarEvent, mode = "workspace" }: CustomMonthEven
                     +{hiddenAssigneesCount}
                   </motion.div>
                 )}
-              </>
+              </div>
             )}
           </AnimatePresence>
-        </div>
-
-        <div className="relative">
-          <div>
-            <div className="absolute"></div>
-          </div>
         </div>
 
         {isMultiDay && !isExpanded && (
