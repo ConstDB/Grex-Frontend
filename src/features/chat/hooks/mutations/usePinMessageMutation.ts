@@ -8,7 +8,7 @@ export const usePinMessageMutation = (workspace_id: number) => {
   return useMutation<void, Error, { message_id: number; pinned_by: number }>({
     mutationFn: ({ message_id, pinned_by }) => pinMessage(workspace_id, message_id, pinned_by),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["pinned_messages", { workspace_id }] });
+      queryClient.invalidateQueries({ queryKey: ["pinned-messages", { workspace_id }] });
     },
     onError: (error) => toast.error(`Failed to create task: ${error.message}`),
   });
