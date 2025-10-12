@@ -2,13 +2,11 @@ import UserTaskPieChart from "@/components/dashboard/UserTaskPieChart";
 import WeeklyProgressChart from "@/components/dashboard/WeeklyProgressChart";
 import WorkspaceTasksDistribution from "@/components/dashboard/WorkspaceTasksDistribution";
 import NoProject from "@/components/NoProject";
-import { Progress } from "@/components/ui/progress";
 import { useAuth } from "@/context/auth-context";
 import { useFetchUserTasksQuery } from "@/features/tasks/hooks/queries/useFetchUserTasksQuery";
 import ChartCard from "@/features/workspace/components/ChartCard";
 import { useFetchAllWorkspacesQuery } from "@/features/workspace/hooks/queries/useFetchAllWorkspacesQuery";
-import { getTaskSummary } from "@/utils";
-import { AlertTriangle, CheckCircle, ClipboardClock, ClipboardList, ClipboardX, Clock, ListChecks } from "lucide-react";
+import { AlertTriangle, CheckCircle, Clock } from "lucide-react";
 
 type DashboardMessage = {
   title: string;
@@ -19,7 +17,6 @@ export default function Dashboard() {
   const { user } = useAuth();
   const { data: workspaces = [] } = useFetchAllWorkspacesQuery(user?.user_id);
   const { data: tasks = [] } = useFetchUserTasksQuery(user?.user_id);
-  const [done, pending, overdue] = getTaskSummary(tasks);
 
   const getDashboardMessage = (name: string | undefined): DashboardMessage => {
     const messages: DashboardMessage[] = [
@@ -43,61 +40,16 @@ export default function Dashboard() {
 
   const { title, description } = getDashboardMessage(user?.first_name);
 
+  if (workspaces?.length === 0) {
+    return <NoProject />;
+  }
+
   return (
     <div className="w-full h-full p-12 font-inter">
-      {workspaces?.length === 0 && <NoProject />}
-
       {workspaces && (
         <>
           <h1 className="text-2xl text-dark-text font-bold">{title}</h1>
           <p className="text-dark-subtle font-medium">{description}</p>
-
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mt-6">
-            <div className="p-4 w-full rounded border bg-dark-surface">
-              <div className="size-12 text-dark-bg rounded border bg-info flex items-center justify-center">
-                <ClipboardList strokeWidth={1} />
-              </div>
-
-              <div className="flex flex-col mt-4">
-                <span className="text-xl font-bold text-dark-text">{tasks.length}</span>
-                <span className="text-sm font-medium text-dark-subtle">Total Tasks</span>
-                <Progress className="mt-2" value={(tasks.length / tasks.length) * 100} />
-              </div>
-            </div>
-
-            <div className="p-4 w-full rounded border bg-dark-surface">
-              <div className="size-12 text-dark-bg rounded border bg-warning flex items-center justify-center">
-                <ClipboardClock strokeWidth={1} />
-              </div>
-              <div className="flex flex-col mt-4">
-                <span className="text-xl font-bold text-dark-text">{pending}</span>
-                <span className="text-sm font-medium text-dark-subtle">In Progress Tasks</span>
-                <Progress className="mt-2" value={(pending / tasks.length) * 100} />
-              </div>
-            </div>
-
-            <div className="p-4 w-full rounded border bg-dark-surface">
-              <div className="size-12 text-dark-bg rounded border bg-error flex items-center justify-center">
-                <ClipboardX strokeWidth={1} />
-              </div>
-              <div className="flex flex-col mt-4">
-                <span className="text-xl font-bold text-dark-text">{overdue}</span>
-                <span className="text-sm font-medium text-dark-subtle">Overdue Tasks</span>
-                <Progress className="mt-2" value={(overdue / tasks.length) * 100} />
-              </div>
-            </div>
-
-            <div className="p-4 w-full rounded border bg-dark-surface">
-              <div className="size-12 text-dark-bg rounded border bg-success flex items-center justify-center">
-                <ListChecks strokeWidth={1} />
-              </div>
-              <div className="flex flex-col mt-4">
-                <span className="text-xl font-bold text-dark-text">{done}</span>
-                <span className="text-sm font-medium text-dark-subtle">Completed Tasks</span>
-                <Progress className="mt-2" value={(done / tasks.length) * 100} />
-              </div>
-            </div>
-          </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 mt-8 gap-4">
             <ChartCard title="Task Status Breakdown" subtitle="Overview of all your tasks by status">
