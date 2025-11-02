@@ -1,3 +1,4 @@
+import { Link } from "react-router";
 import SigninForm from "./SigninForm";
 import SocialButtonsContainer from "./SocialButtonsContainer";
 
@@ -17,13 +18,13 @@ export default function SigninPanel() {
       <div className="flex flex-col space-y-6 items-center justify-center">
         <p className="text-dark-subtle text-center">
           By creating an account, you agree to Grex's{" "}
-          <span className="text-dark-text font-semibold underline">
-            Terms of Service and Privacy
-          </span>
+          <span className="text-dark-text font-semibold underline">Terms of Service and Privacy</span>
         </p>
         <p className="text-center text-dark-text">
           Don't have an account?{" "}
-          <span className="text-brand-primary font-semibold">Sign in</span>
+          <Link to="/auth/signup">
+            <span className="text-brand-primary font-semibold">Sign up</span>
+          </Link>
         </p>
       </div>
     </div>

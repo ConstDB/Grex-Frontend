@@ -182,7 +182,7 @@
 }
 
 @theme {
-  --color-brand-primary: oklch(76.61% 0.151 117.41);
+  --color-brand-primary: #d2ff28;
   --color-brand-dark: oklch(59.04% 0.114 117.67);
   --color-brand-light: oklch(83.41% 0.114 115.74);
   --color-brand-soft: oklch(95.15% 0.033 114.41);
