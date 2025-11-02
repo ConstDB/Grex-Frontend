@@ -107,7 +107,7 @@ export default function Landing() {
       initial="hidden"
       animate="visible"
       variants={containerVariants}
-      className="min-w-screen min-h-screen bg-dark-bg scroll-smooth pb-60"
+      className="min-w-screen min-h-screen bg-dark-bg scroll-smooth"
     >
       {/* Header */}
       <motion.header variants={itemVariants} className="p-4 flex justify-between">
